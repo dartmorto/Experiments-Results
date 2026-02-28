@@ -57,7 +57,7 @@ public class CollectionManager {
         Experiment experiment = new Experiment(id, name, description, owner);
         experiments.put(id, experiment);
 
-        System.out.println("✓ Эксперимент '" + name + "' успешно создан (ID: " + id + ")");
+        System.out.println("Эксперимент '" + name + "' успешно создан (ID: " + id + ")");
         return experiment;
     }
 
@@ -308,10 +308,10 @@ public class CollectionManager {
         }
 
         for (Experiment exp : experiments.values()) {
-            System.out.println("📊 Эксперимент [ID: " + exp.id + "]: " + exp.name);
-            System.out.println("   Описание: " + exp.description);
-            System.out.println("   Владелец: " + exp.owner);
-            System.out.println("   Создан: " + exp.createdAt);
+            System.out.println("\nЭксперимент [ID: " + exp.id + "]: " + exp.name);
+            System.out.println("\nОписание: " + exp.description);
+            System.out.println("\nВладелец: " + exp.owner);
+            System.out.println("\nСоздан: " + exp.createdAt);
 
             List<Run> expRuns = runs.values().stream()
                     .filter(r -> r.experimentId == exp.id)
