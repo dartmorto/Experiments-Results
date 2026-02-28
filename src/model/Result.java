@@ -45,6 +45,9 @@ public final class Result implements Comparable<Result>{
 
     }
 
+    public Result(long id, long runId, MeasurementParam param, double value, String unit, String s) {
+    }
+
     /**
      * Сравнивает результаты по идентификатору для сортировки по умолчанию.
      *

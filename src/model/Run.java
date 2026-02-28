@@ -36,6 +36,9 @@ public class Run implements Comparable<Run>{
     this.operator = operator;
     this.createdAt = Instant.now();}
 
+    public Run(long id, long experimentId, String name, String operator) {
+    }
+
     /**
      * Сравнивает запуски по идентификатору для сортировки по умолчанию.
      *
