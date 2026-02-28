@@ -2,15 +2,37 @@ package model;
 
 import java.time.Instant;
 
+/**
+ * Класс, представляющий результат измерения в ходе эксперимента.
+ * Содержит значения параметров и метаданные об измерении.
+ */
 public final class Result implements Comparable<Result>{
+    /** Уникальный идентификатор результата. */
     public  long id;
+    /** Идентификатор запуска, к которому относится этот результат. */
     public long runId;
+    /** Измеренный параметр. */
     public MeasurementParam param;
+    /** Значение параметра. */
     public double value;
+    /** Единица измерения параметра. */
     public String unit;
+    /** Комментарий к результату измерения. */
     public String comment;
+    /** Дата и время проведения измерения. */
     public Instant createdAt = Instant.now();
 
+    /**
+     * Конструктор для создания нового результата.
+     * Автоматически устанавливает текущее время в createdAt.
+     *
+     * @param id уникальный идентификатор результата
+     * @param runId идентификатор запуска
+     * @param param измеренный параметр
+     * @param value значение параметра
+     * @param unit единица измерения
+     * @param comment комментарий к результату
+     */
     public Result(long id, long runId, String comment, double value,
                   String unit, Instant createdAt, MeasurementParam param) {
         this.id = id;
@@ -23,11 +45,22 @@ public final class Result implements Comparable<Result>{
 
     }
 
+    /**
+     * Сравнивает результаты по идентификатору для сортировки по умолчанию.
+     *
+     * @param o другой результат для сравнения
+     * @return отрицательное число, если id меньше; 0, если равны; положительное число, если больше
+     */
     @Override
 public int compareTo(Result o) {
     return Long.compare(this.id, o.id);
 }
 
+    /**
+     * Возвращает строковое представление результата.
+     *
+     * @return строка с информацией о результате
+     */
     @Override
 public String toString() {
     return "Result{" +
