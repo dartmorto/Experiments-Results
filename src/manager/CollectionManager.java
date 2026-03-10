@@ -108,7 +108,7 @@ public class CollectionManager {
         }
         experiment.updatedAt = Instant.now();
 
-        System.out.println("✓ Эксперимент с ID " + id + " успешно обновлен");
+        System.out.println("Эксперимент с ID " + id + " успешно обновлен");
         return experiment;
     }
 
@@ -123,6 +123,34 @@ public class CollectionManager {
             throw new IllegalArgumentException("Эксперимент с ID " + id + " не найден");
         }
         System.out.println("✓ Эксперимент с ID " + id + " удален");
+    }
+
+    /**
+     * Добавляет эксперимент напрямую (для загрузки из файла).
+     */
+    public void addExperimentDirect(Experiment experiment) {
+        experiments.put(experiment.id, experiment);
+    }
+
+    /**
+     * Добавляет запуск напрямую (для загрузки из файла).
+     */
+    public void addRunDirect(Run run) {
+        runs.put(run.id, run);
+    }
+
+    /**
+     * Добавляет результат напрямую (для загрузки из файла).
+     */
+    public void addResultDirect(Result result) {
+        results.put(result.id, result);
+    }
+
+    /**
+     * Устанавливает текущий ID для генератора.
+     */
+    public void setCurrentId(long id) {
+        this.currentId = id;
     }
 
     // блок про запуски
@@ -333,8 +361,8 @@ public class CollectionManager {
                 System.out.println();
             }
         }
-    }
-}
+    }}
+
 
 
 
