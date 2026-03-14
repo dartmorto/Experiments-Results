@@ -43,15 +43,7 @@ public class CollectionManager {
      * @throws IllegalArgumentException если название или описание пусты
      */
     public Experiment createExperiment(String name, String description, String owner) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Название эксперимента не может быть пустым");
-        }
-        if (description == null || description.trim().isEmpty()) {
-            throw new IllegalArgumentException("Описание эксперимента не может быть пустым");
-        }
-        if (owner == null || owner.trim().isEmpty()) {
-            throw new IllegalArgumentException("Владелец не может быть пустым");
-        }
+
 
         long id = generateId();
         Experiment experiment = new Experiment(id, name, description, owner);
@@ -122,7 +114,7 @@ public class CollectionManager {
         if (experiments.remove(id) == null) {
             throw new IllegalArgumentException("Эксперимент с ID " + id + " не найден");
         }
-        System.out.println("✓ Эксперимент с ID " + id + " удален");
+        System.out.println("Эксперимент с ID " + id + " удален");
     }
 
     /**
@@ -222,7 +214,7 @@ public class CollectionManager {
         if (runs.remove(id) == null) {
             throw new IllegalArgumentException("Запуск с ID " + id + " не найден");
         }
-        System.out.println("✓ Запуск с ID " + id + " удален");
+        System.out.println("Запуск с ID " + id + " удален");
     }
 
     // блок про результаты

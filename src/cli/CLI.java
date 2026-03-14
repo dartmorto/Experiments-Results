@@ -256,7 +256,6 @@ stats
             return;
         }
 
-        Run run = manager.getRun(runId);
 
 
 
