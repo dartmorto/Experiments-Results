@@ -108,6 +108,15 @@ stats
 """);
     }
 
+    private Long parseId(String input) {
+        try {
+            return Long.parseLong(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Ошибка: ID должно быть числом");
+            return null;
+        }
+    }
+
     private void expCreate() {
 
         System.out.print("Название: ");
@@ -126,7 +135,7 @@ stats
 
         Experiment exp = new Experiment(expId, name, description, owner);
 
-        manager.addExperiment(exp);
+        manager.addExperimentDirect(exp);
 
         System.out.println("OK experiment_id=" + expId);
 
@@ -154,14 +163,14 @@ stats
             return;
         }
 
-        long id = Long.parseLong(parts[1]);
+        Long id = parseId(parts[1]);
+
+        if (id == null) {
+            return;
+        }
 
         Experiment exp = manager.getExperiment(id);
 
-        if (exp == null) {
-            System.out.println("Эксперимент не найден");
-            return;
-        }
 
 
 
@@ -183,14 +192,14 @@ stats
             return;
         }
 
-        long expId = Long.parseLong(parts[1]);
+        Long expId = parseId(parts[1]);
+
+        if (expId == null) {
+            return;
+        }
 
         Experiment exp = manager.getExperiment(expId);
 
-        if (exp == null) {
-            System.out.println("Ошибка: эксперимент не найден");
-            return;
-        }
 
         System.out.print("Название: ");
         String name = scanner.nextLine();
@@ -200,7 +209,7 @@ stats
 
         Run run = new Run(runId, expId, name, operator);
 
-        manager.addRun(run);
+        manager.addRunDirect(run);
 
         System.out.println("OK run_id=" + runId);
 
@@ -241,18 +250,26 @@ stats
             return;
         }
 
-        long runId = Long.parseLong(parts[1]);
+        Long runId = parseId(parts[1]);
 
-        Run run = manager.getRun(runId);
-
-        if (run == null) {
-            System.out.println("Ошибка: run не найден");
+        if (runId == null) {
             return;
         }
 
+        Run run = manager.getRun(runId);
+
+
+
         System.out.print("Параметр: ");
         String paramInput = scanner.nextLine().toUpperCase();
-        MeasurementParam param = MeasurementParam.valueOf(paramInput);
+        MeasurementParam param;
+
+        try {
+            param = MeasurementParam.valueOf(paramInput);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ошибка: такого параметра не существует");
+            return;
+        }
 
         System.out.print("Значение: ");
         double value = Double.parseDouble(scanner.nextLine());
@@ -267,7 +284,7 @@ stats
 
         Result result = new Result(resId, runId, param, value, unit, comment);
 
-        manager.addResult(result);
+        manager.addResultDirect(result);
 
         System.out.println("OK result_id=" + resId);
 
