@@ -130,7 +130,7 @@ stats
         System.out.print("Описание (можно пусто): ");
         String description = scanner.nextLine();
 
-        System.out.println("Владелец: ");
+        System.out.print("Владелец: ");
         String owner = scanner.nextLine();
 
         Experiment exp = new Experiment(expId, name, description, owner);
@@ -149,7 +149,7 @@ stats
             return;
         }
 
-        System.out.println("ID  Name");
+        System.out.println("ID  Название");
 
         for (Experiment e : manager.getAllExperiments()) {
             System.out.println(e.id + "  " + e.name);
@@ -228,7 +228,7 @@ stats
         Experiment exp = manager.getExperiment(expId);
 
 
-        System.out.println("ID  Run Название  Проводящий");
+        System.out.println("ID  Запуск Название  Проводящий");
 
         for (Run r : manager.getAllRuns()) {
 
@@ -293,7 +293,7 @@ stats
 
     private void resList(String[] parts) {
 
-        System.out.println("ID  Param  Value  Unit  Comment");
+        System.out.println("ID  Параметр  Значение  Размерность  Комментарий");
 
         for (Result r : manager.getAllResults()) {
 
