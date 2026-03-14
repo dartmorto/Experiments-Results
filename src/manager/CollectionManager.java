@@ -11,16 +11,24 @@ import java.util.*;
  */
 public class CollectionManager {
 
-    /** Коллекция экспериментов, отсортированная по идентификатору. */
+    /**
+     * Коллекция экспериментов, отсортированная по идентификатору.
+     */
     private final TreeMap<Long, Experiment> experiments = new TreeMap<>();
 
-    /** Коллекция запусков, отсортированная по идентификатору. */
+    /**
+     * Коллекция запусков, отсортированная по идентификатору.
+     */
     private final TreeMap<Long, Run> runs = new TreeMap<>();
 
-    /** Коллекция результатов, отсортированная по идентификатору. */
+    /**
+     * Коллекция результатов, отсортированная по идентификатору.
+     */
     private final TreeMap<Long, Result> results = new TreeMap<>();
 
-    /** Счетчик для генерации уникальных идентификаторов. */
+    /**
+     * Счетчик для генерации уникальных идентификаторов.
+     */
     private long currentId = 1;
 
     /**
@@ -36,22 +44,15 @@ public class CollectionManager {
     /**
      * Создает новый эксперимент и добавляет его в коллекцию.
      *
-     * @param name название эксперимента
+     * @param name        название эксперимента
      * @param description описание эксперимента
-     * @param owner владелец эксперимента
+     * @param owner       владелец эксперимента
      * @return созданный эксперимент
      * @throws IllegalArgumentException если название или описание пусты
      */
     public Experiment createExperiment(String name, String description, String owner) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Название эксперимента не может быть пустым");
-        }
-        if (description == null || description.trim().isEmpty()) {
-            throw new IllegalArgumentException("Описание эксперимента не может быть пустым");
-        }
-        if (owner == null || owner.trim().isEmpty()) {
-            throw new IllegalArgumentException("Владелец не может быть пустым");
-        }
+
+        Validator.validateExperiment(name, description, owner);
 
         long id = generateId();
         Experiment experiment = new Experiment(id, name, description, owner);
@@ -88,8 +89,8 @@ public class CollectionManager {
     /**
      * Обновляет эксперимент.
      *
-     * @param id идентификатор эксперимента
-     * @param name новое название (если не null)
+     * @param id          идентификатор эксперимента
+     * @param name        новое название (если не null)
      * @param description новое описание (если не null)
      * @return обновленный эксперимент
      * @throws IllegalArgumentException если эксперимент не найден
@@ -122,7 +123,7 @@ public class CollectionManager {
         if (experiments.remove(id) == null) {
             throw new IllegalArgumentException("Эксперимент с ID " + id + " не найден");
         }
-        System.out.println("✓ Эксперимент с ID " + id + " удален");
+        System.out.println("Эксперимент с ID " + id + " удален");
     }
 
     /**
@@ -159,30 +160,36 @@ public class CollectionManager {
      * Создает новый запуск и добавляет его в коллекцию.
      *
      * @param experimentId идентификатор эксперимента
-     * @param name название запуска
-     * @param operator имя оператора
+     * @param name         название запуска
+     * @param operator     имя оператора
      * @return созданный запуск
      * @throws IllegalArgumentException если входные данные некорректны
      */
     public Run createRun(long experimentId, String name, String operator) {
+
         if (experimentId <= 0) {
             throw new IllegalArgumentException("ID эксперимента должен быть положительным");
         }
+
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Название запуска не может быть пустым");
         }
+
         if (operator == null || operator.trim().isEmpty()) {
             throw new IllegalArgumentException("Имя оператора не может быть пустым");
-        }
-
-        //существование эксперимента
-        if (!experiments.containsKey(experimentId)) {
-            throw new IllegalArgumentException("Эксперимент с ID " + experimentId + " не существует");
         }
 
         long id = generateId();
         Run run = new Run(id, experimentId, name, operator);
         runs.put(id, run);
+
+        return run;
+
+
+        //существование эксперимента
+        if (!experiments.containsKey(experimentId)) {
+            throw new IllegalArgumentException("Эксперимент с ID " + experimentId + " не существует");
+        }
 
         System.out.println(" Запуск '" + name + "' успешно создан (ID: " + id + ")");
         return run;
@@ -222,7 +229,7 @@ public class CollectionManager {
         if (runs.remove(id) == null) {
             throw new IllegalArgumentException("Запуск с ID " + id + " не найден");
         }
-        System.out.println("✓ Запуск с ID " + id + " удален");
+        System.out.println("Запуск с ID " + id + " удален");
     }
 
     // блок про результаты
@@ -241,13 +248,13 @@ public class CollectionManager {
     public Result createResult(long runId, MeasurementParam param, double value,
                                String unit, String comment) {
         if (runId <= 0) {
-            throw new IllegalArgumentException("ID запуска должен быть положительным");
+            throw new IllegalArgumentException("ID запуска должен быть положительным.");
         }
         if (param == null) {
-            throw new IllegalArgumentException("Параметр не может быть null");
+            throw new IllegalArgumentException("Параметр не может быть пустым.");
         }
         if (unit == null || unit.trim().isEmpty()) {
-            throw new IllegalArgumentException("Единица измерения не может быть пустой");
+            throw new IllegalArgumentException("Единица измерения не может быть пустой.");
         }
 
         //существование запуска
