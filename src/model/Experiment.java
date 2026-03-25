@@ -48,7 +48,14 @@ public class Experiment implements Comparable<Experiment> {
      * @param description описание
      * @param owner владелец
      */
-    public Experiment(long id, String name, String description, String owner) { }
+    public Experiment(long id, String name, String description, String owner) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.owner = owner;
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
+    }
 
     /**
      * Возвращает идентификатор эксперимента.

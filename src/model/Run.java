@@ -1,7 +1,5 @@
 package model;
 
-import java.time.Instant;
-
 /**
  * Класс запуск эксперимента.
  * Каждый запуск связан с конкретным экспериментом
@@ -37,7 +35,12 @@ public class Run {
      * @param name название запуска
      * @param operator оператор
      */
-    public Run(long id, long experimentId, String name, String operator) { }
+    public Run(long id, long experimentId, String name, String operator) {
+        this.id = id;
+        this.experimentId = experimentId;
+        this.name = name;
+        this.operator = operator;
+    }
 
     /**
      * Возвращает id запуска.

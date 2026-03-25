@@ -121,7 +121,7 @@ public class CommandHandler {
         System.out.println("Введите параметр (например TEMPERATURE):");
         String paramInput = scanner.nextLine().trim();
 
-        var param = Enum.valueOf(domain.MeasurementParam.class, paramInput);
+        var param = Enum.valueOf(model.MeasurementParam.class, paramInput);
 
         System.out.println("Введите значение:");
         double value = Double.parseDouble(scanner.nextLine());
