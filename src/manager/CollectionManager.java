@@ -8,10 +8,13 @@
  * автоматическую сортировку по идентификатору.
  */
 package manager;
-import model.*;
-
+import domain.*;
+import validation.*;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
 
 public class CollectionManager {
 
@@ -63,6 +66,55 @@ public class CollectionManager {
      */
     public Experiment getExperiment(long id) { return null; }
 
+
+     /**
+     * Получает эксперимент по id.
+     */
+    public Experiment getById(long id) {
+
+        Validator.requirePositive(id, "ID");
+
+        return Optional.ofNullable(experiments.get(id))
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Эксперимент не найден"));}
+
+    /**
+     * Возвращает все эксперименты.
+     */
+    public List<Experiment> getAll() {
+        return new ArrayList<>(experiments.values());
+    }
+
+    /**
+     * Обновляет эксперимент.
+     */
+    public Experiment update(long id, String name, String description) {
+
+        Validator.requirePositive(id, "ID");
+
+        Experiment experiment = getById(id);
+
+        Validator.requireNonBlank(name, "Название");
+        Validator.requireNonBlank(description, "Описание");
+
+        experiment.update(name, description);
+
+        return experiment;
+    }
+
+    /**
+     * Удаляет эксперимент.
+     */
+    public void remove(long id) {
+
+        Validator.requirePositive(id, "ID");
+
+        if (experiments.remove(id) == null) {
+            throw new IllegalArgumentException("Эксперимент не найден");
+        }
+    }
+
+
     /**
      * Создает новый запуск.
      *
@@ -74,6 +126,68 @@ public class CollectionManager {
     public Run createRun(long experimentId, String name, String operator) { return null; }
 
     /**
+     * Получает запуск по id.
+     */
+    public Run getRunById(long id) {
+
+        Validator.requirePositive(id, "ID");
+
+        return Optional.ofNullable(runs.get(id))
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Эксперимент не найден"));}
+                    
+    /**
+     * Возвращает список запусков по id эксперимента.
+     *
+     * @param experimentId id эксперимента
+     * @return список запусков этого эксперимента
+     */
+    public List<Run> getRunsByExperimentId(long experimentId) {
+        Validator.requirePositive(experimentId, "ID эксперимента");
+
+        List<Run> result = new ArrayList<>();
+        for (Run run : runs.values()) {
+            if (run.getExperimentId() == experimentId) {
+                result.add(run);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Обновляет запуск.
+     */
+    public Run updateRun(long id, String name, String operator) {
+
+        Validator.requirePositive(id, "ID");
+
+        Run run = getRunById(id);
+
+        Validator.requireNonBlank(name, "Название");
+        Validator.requireNonBlank(operator, "Оператор");
+
+        return run;
+    }
+
+    /**
+     * Возвращает все запуски.
+     */
+    public List<Run> getAllRuns() {
+        return new ArrayList<>(runs.values());
+    }
+
+    /**
+     * Удаляет запуск.
+     */
+    public void removeRun(long id) {
+
+        Validator.requirePositive(id, "ID");
+
+        if (experiments.remove(id) == null) {
+            throw new IllegalArgumentException("Эксперимент не найден");
+        }
+    }
+    /**
      * Создает результат измерения.
      *
      * @param runId id запуска
@@ -83,9 +197,28 @@ public class CollectionManager {
      * @param comment комментарий
      * @return результат
      */
+
     public Result createResult(long runId, MeasurementParam param,
                                double value, String unit, String comment) { return null; }
+                                
+    
+
+    /**
+     * Получает результат по id запуска
+     */
+    public Result getResultByRunId(long runId) {
+        Validator.requirePositive(runId, "ID запуска");
+        for (Result result : results.values()) {
+            if (result.runId == runId) {
+                return result;
+            }
+        }
+        throw new IllegalArgumentException("Результат не найден");
+    }
 }
+
+        
+
 
 
 
