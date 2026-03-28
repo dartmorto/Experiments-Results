@@ -1,4 +1,4 @@
-package model;
+package domain;
 
 /**
  * Класс запуск эксперимента.

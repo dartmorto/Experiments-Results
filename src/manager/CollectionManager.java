@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Optional;
 import java.util.List;
-import java.util.ArrayList;
 
 public class CollectionManager {
 
@@ -36,7 +35,9 @@ public class CollectionManager {
     /**
      * Счетчик идентификаторов.
      */
-    private long currentId;
+    private long currentExperimentId;
+    private long currentRunId;
+    private long currentResultId;
 
 
 
@@ -45,7 +46,9 @@ public class CollectionManager {
      *
      * @return новый id
      */
-    private long generateId() { return 0; }
+    public Long generateExperimentId() { return currentExperimentId++; }
+    public Long generateRunId() { return currentRunId++; }
+    public Long generateResultId() { return currentResultId++; }
 
     /**
      * Создает новый эксперимент.
@@ -116,13 +119,13 @@ public class CollectionManager {
 
     /**
      * Создает новый запуск.
-     *
+     * @param id уникальный идентификатор
      * @param experimentId id эксперимента
      * @param name название
      * @param operator оператор
      * @return созданный запуск
      */
-    public Run createRun(long experimentId, String name, String operator) { return null; }
+    public Run createRun(long id, long experimentId, String name, String operator) { return null; }
 
     /**
      * Получает запуск по id.
@@ -197,7 +200,7 @@ public class CollectionManager {
      * @return результат
      */
 
-    public Result createResult(long runId, MeasurementParam param,
+    public Result createResult(long id, long runId, MeasurementParam param,
                                double value, String unit, String comment) { return null; }
                                 
     

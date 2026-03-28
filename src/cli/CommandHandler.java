@@ -86,13 +86,12 @@ public class CommandHandler {
      */
     private void createExperiment() {
 
+        Long id = manager.generateExperimentId();
         String name = readString("Название");
         String description = readString("Описание");
         String owner = readString("Владелец");
 
-        manager.createExperiment(name, description, owner);
-
-        System.out.println("Эксперимент успешно создан");
+        System.out.println("Эксперимент " + id + name + " успешно создан" );
     }
 
     /**
@@ -100,13 +99,14 @@ public class CommandHandler {
      */
     private void createRun() {
 
+        Long id = manager.generateRunId();
         long experimentId = readLong("ID эксперимента");
         String name = readString("Название запуска");
         String operator = readString("Оператор");
 
-        manager.createRun(experimentId, name, operator);
+        manager.createRun(id, experimentId, name, operator);
 
-        System.out.println("Запуск успешно создан");
+        System.out.println("Запуск " + id + name + " успешно создан");
     }
 
     /**
@@ -114,6 +114,7 @@ public class CommandHandler {
      */
     private void createResult() {
 
+        Long id = manager.generateResultId();
         long runId = readLong("ID запуска");
         String unit = readString("Единица измерения");
         String comment = readOptionalString("Комментарий");
@@ -121,14 +122,14 @@ public class CommandHandler {
         System.out.println("Введите параметр (например TEMPERATURE):");
         String paramInput = scanner.nextLine().trim();
 
-        var param = Enum.valueOf(model.MeasurementParam.class, paramInput);
+        var param = Enum.valueOf(domain.MeasurementParam.class, paramInput);
 
         System.out.println("Введите значение:");
         double value = Double.parseDouble(scanner.nextLine());
 
-        manager.createResult(runId, param, value, unit, comment);
+        manager.createResult(id, runId, param, value, unit, comment);
 
-        System.out.println("Результат успешно создан");
+        System.out.println("Результат " + id + " успешно создан");
     }
 
     /**
