@@ -81,9 +81,8 @@ public class CollectionManager {
     /**
      * Возвращает все эксперименты.
      */
-    public List<Experiment> getAll() {
-        return new ArrayList<>(experiments.values());
-    }
+    public Map<Long, Experiment> getAllExperiments() { return experiments; }
+        
 
     /**
      * Обновляет эксперимент.
@@ -142,13 +141,13 @@ public class CollectionManager {
      * @param experimentId id эксперимента
      * @return список запусков этого эксперимента
      */
-    public List<Run> getRunsByExperimentId(long experimentId) {
+    public Map<Long, Run> getRunsByExperimentId(long experimentId) {
         Validator.requirePositive(experimentId, "ID эксперимента");
 
-        List<Run> result = new ArrayList<>();
+        Map<Long, Run> result = new TreeMap<>();
         for (Run run : runs.values()) {
             if (run.getExperimentId() == experimentId) {
-                result.add(run);
+                result.put(run.getId(), run);
             }
         }
         return result;
@@ -172,8 +171,8 @@ public class CollectionManager {
     /**
      * Возвращает все запуски.
      */
-    public List<Run> getAllRuns() {
-        return new ArrayList<>(runs.values());
+    public Map<Long, Run> getAllRuns() {
+        return new TreeMap<>(runs);
     }
 
     /**
