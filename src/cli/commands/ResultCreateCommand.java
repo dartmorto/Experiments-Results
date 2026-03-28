@@ -15,6 +15,9 @@ public class ResultCreateCommand extends Command implements Registry{
 
     @Override
     public void execute(String[] parts) {
+        if (parts.length < 2) {
+            throw new IllegalArgumentException("Укажите id запуска");
+        }
         long runId = parseId(parts[1]);
         System.out.println("Единица измерения");
         String unit = scanner.nextLine();

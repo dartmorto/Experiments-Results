@@ -1,6 +1,6 @@
 package cli.commands;
-import cli.CommandHandler;
-import java.util.*;
+
+import java.util.Map;
 
 public interface Registry {
     void register(Map<String, Command> commands);

@@ -17,8 +17,11 @@ public class ResultShowCommand extends Command implements Registry{
 
     @Override
     public void execute(String[] parts) {
-        Long ResId = parseId(parts[1]);
-        Result result = manager.getResultById(ResId);
+        if (parts.length < 2) {
+            throw new IllegalArgumentException("Укажите ID результата");
+        }
+        long resId = parseId(parts[1]);
+        Result result = manager.getResultById(resId);
         System.out.println("ID" + result.id);
         System.out.println("ID Пробега" + result.runId);
         System.out.println("Параметр" + result.param);
