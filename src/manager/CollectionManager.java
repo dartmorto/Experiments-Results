@@ -207,6 +207,14 @@ public class CollectionManager {
 
 
     /**
+     * Возвращает все результатов
+     */                           
+    public Map<Long, Result> getAllResults() {
+        return new TreeMap<>(results);
+    }
+
+
+    /**
     Получает результаты по id
      */                         
     public Result getResultById(long id) {
@@ -222,6 +230,8 @@ public class CollectionManager {
 
     /**
      * Получает результат по id запуска
+     * @param runId
+     * @return результат по запуску
      */
     public Result getResultByRunId(long runId) {
         Validator.requirePositive(runId, "ID запуска");
@@ -233,23 +243,6 @@ public class CollectionManager {
         throw new IllegalArgumentException("Результат не найден");
     }
 
-    /**
-     * Возвращает все результаты по запуску
-     * @param runId
-     * @return списк результатов по запуску 
-     */
-    public Map<Long, Result> getResultsByRunId(long runId) {
-        
-        Validator.requirePositive(runId, "ID запуска ");
-
-        Map<Long, Result> res= new TreeMap<>();
-        for (Result result : results.values()) {
-            if (result.runId == runId) {
-                res.put(result.id, result);
-            }
-        }
-        return res;
-    }
 }
 
 
