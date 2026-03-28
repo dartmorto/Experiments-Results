@@ -10,17 +10,17 @@ public class Run {
     /**
      * Уникальный идентификатор запуска.
      */
-    private final long id;
+    public final long id;
 
     /**
      * Идентификатор эксперимента.
      */
-    private final long experimentId;
+    public final long experimentId;
 
     /**
      * Название запуска.
      */
-    private final String name;
+    public final String name;
 
     /**
      * Имя оператора.

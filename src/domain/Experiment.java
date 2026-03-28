@@ -13,12 +13,12 @@ public class Experiment implements Comparable<Experiment> {
     /**
      * Уникальный идентификатор эксперимента.
      */
-    private final long id;
+    public final long id;
 
     /**
      * Название эксперимента.
      */
-    private String name;
+    public String name;
 
     /**
      * Описание эксперимента.

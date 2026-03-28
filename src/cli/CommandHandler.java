@@ -1,7 +1,9 @@
 package cli;
 
 import manager.CollectionManager;
+import cli.commands.*;
 
+import java.util.*;
 import java.util.Scanner;
 
 /**
@@ -15,6 +17,7 @@ public class CommandHandler {
 
     private final CollectionManager manager;
     private final Scanner scanner;
+    public final Map<String, Command> commands = new HashMap<>();
 
     /**
      * Создает обработчик команд.
@@ -35,146 +38,29 @@ public class CommandHandler {
         System.out.println("Введите 'help' для списка команд");
 
         while (true) {
+
+            System.out.print("> ");
+
+            String line = scanner.nextLine().trim();
+
+            if (line.isEmpty()) continue;
+
+            String[] parts = line.split(" ");
+            String commandName = parts[0];
+
+            Command command = commands.get(commandName);
+
+            if (command == null) {
+                System.out.println("Неизвестная команда");
+                continue;
+            }
+
             try {
-                System.out.print("> ");
-                String command = scanner.nextLine().trim();
-
-                if (command.isEmpty()) {
-                    continue;
-                }
-
-                handleCommand(command);
-
+                command.execute(parts);
             } catch (Exception e) {
                 System.out.println("Ошибка: " + e.getMessage());
             }
         }
     }
 
-    /**
-     * Обрабатывает введенную команду.
-     *
-     * @param command строка команды
-     */
-    private void handleCommand(String command) {
-
-        switch (command) {
-            case "help" -> printHelp();
-            case "create_experiment" -> createExperiment();
-            case "create_run" -> createRun();
-            case "create_result" -> createResult();
-            case "exit" -> exit();
-            default -> System.out.println("Неизвестная команда. Введите 'help'");
-        }
-    }
-
-    /**
-     * Выводит список доступных команд.
-     */
-    private void printHelp() {
-        System.out.println("""
-                Доступные команды:
-                create_experiment - создать эксперимент
-                create_run        - создать запуск
-                create_result     - создать результат
-                exit              - выход
-                """);
-    }
-
-    /**
-     * Создает эксперимент.
-     */
-    private void createExperiment() {
-
-        Long id = manager.generateExperimentId();
-        String experiment_name = readString("Название");
-        String description = readString("Описание");
-        String owner = readString("Владелец");
-
-        System.out.println("Эксперимент " + id + " " + experiment_name + " успешно создан" );
-    }
-
-    /**
-     * Создает запуск.
-     */
-    private void createRun() {
-
-        Long id = manager.generateRunId();
-        long experimentId = readLong("ID эксперимента");
-        String run_name = readString("Название запуска");
-        String operator = readString("Оператор");
-
-        manager.createRun(id, experimentId, run_name, operator);
-
-        System.out.println("Запуск " + id + " эксперимента  " + run_name  + " успешно создан");
-    }
-
-    /**
-     * Создает результат.
-     */
-    private void createResult() {
-
-        Long id = manager.generateResultId();
-        long runId = readLong("ID запуска");
-        String unit = readString("Единица измерения");
-        String comment = readOptionalString("Комментарий");
-
-        System.out.println("Введите параметр (например TEMPERATURE):");
-        String paramInput = scanner.nextLine().trim();
-
-        var param = Enum.valueOf(domain.MeasurementParam.class, paramInput);
-
-        System.out.println("Введите значение:");
-        double value = Double.parseDouble(scanner.nextLine());
-
-        manager.createResult(id, runId, param, value, unit, comment);
-
-        System.out.println("Результат " + id + " успешно создан");
-    }
-
-    /**
-     * Завершает работу программы.
-     */
-    private void exit() {
-        System.out.println("Завершение работы...");
-        System.exit(0);
-    }
-
-    /**
-     * Считывает обязательную строку.
-     */
-    private String readString(String fieldName) {
-        while (true) {
-            System.out.print(fieldName + ": ");
-            String input = scanner.nextLine().trim();
-
-            if (!input.isEmpty()) {
-                return input;
-            }
-
-            System.out.println(fieldName + " не может быть пустым");
-        }
-    }
-
-    /**
-     * Считывает необязательную строку.
-     */
-    private String readOptionalString(String fieldName) {
-        System.out.print(fieldName + " (можно пусто): ");
-        return scanner.nextLine().trim();
-    }
-
-    /**
-     * Считывает long с валидацией.
-     */
-    private long readLong(String fieldName) {
-        while (true) {
-            try {
-                System.out.print(fieldName + ": ");
-                return Long.parseLong(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Введите корректное число");
-            }
-        }
-    }
 }
