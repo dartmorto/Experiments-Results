@@ -87,11 +87,11 @@ public class CommandHandler {
     private void createExperiment() {
 
         Long id = manager.generateExperimentId();
-        String name = readString("Название");
+        String experiment_name = readString("Название");
         String description = readString("Описание");
         String owner = readString("Владелец");
 
-        System.out.println("Эксперимент " + id + name + " успешно создан" );
+        System.out.println("Эксперимент " + id + " " + experiment_name + " успешно создан" );
     }
 
     /**
@@ -101,12 +101,12 @@ public class CommandHandler {
 
         Long id = manager.generateRunId();
         long experimentId = readLong("ID эксперимента");
-        String name = readString("Название запуска");
+        String run_name = readString("Название запуска");
         String operator = readString("Оператор");
 
-        manager.createRun(id, experimentId, name, operator);
+        manager.createRun(id, experimentId, run_name, operator);
 
-        System.out.println("Запуск " + id + name + " успешно создан");
+        System.out.println("Запуск " + id + " эксперимента  " + run_name  + " успешно создан");
     }
 
     /**

@@ -191,7 +191,7 @@ public class CollectionManager {
     }
     /**
      * Создает результат измерения.
-     *
+     *@param id id измерений
      * @param runId id запуска
      * @param param параметр
      * @param value значение
@@ -200,9 +200,24 @@ public class CollectionManager {
      * @return результат
      */
 
-    public Result createResult(long id, long runId, MeasurementParam param,
-                               double value, String unit, String comment) { return null; }
-                                
+    
+    
+     public Result createResult(long resId, long runId, MeasurementParam param,
+                               double value, String unit, String comment) { return null;}
+
+
+    /**
+    Получает результаты по id
+     */                         
+    public Result getResultById(long id) {
+
+        Validator.requirePositive(id, "ID");
+
+        return Optional.ofNullable(results.get(id))
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Результат не найден"));
+    }
+
     
 
     /**
@@ -217,7 +232,29 @@ public class CollectionManager {
         }
         throw new IllegalArgumentException("Результат не найден");
     }
+
+    /**
+     * Возвращает все результаты по запуску
+     * @param runId
+     * @return списк результатов по запуску 
+     */
+    public Map<Long, Result> getResultsByRunId(long runId) {
+        
+        Validator.requirePositive(runId, "ID запуска ");
+
+        Map<Long, Result> res= new TreeMap<>();
+        for (Result result : results.values()) {
+            if (result.runId == runId) {
+                res.put(result.id, result);
+            }
+        }
+        return res;
+    }
 }
+
+
+
+    
 
         
 
