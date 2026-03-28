@@ -27,7 +27,17 @@ public class CommandHandler {
     public CommandHandler(CollectionManager manager) {
         this.manager = manager;
         this.scanner = new Scanner(System.in);
-    }
+
+        
+        new HelpCommand(manager, scanner).register(commands);
+        new ExitCommand(manager, scanner).register(commands);
+        new ExpCreateCommand(manager, scanner).register(commands);
+        new ExpListCommand(manager, scanner).register(commands);
+        new RunListCommand(manager, scanner).register(commands);
+        new ResultCreateCommand(manager, scanner).register(commands);
+        new ResultShowCommand(manager, scanner).register(commands);
+        }
+    
 
     /**
      * Запускает цикл обработки команд.
