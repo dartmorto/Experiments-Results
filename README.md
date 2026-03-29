@@ -5,14 +5,21 @@
 An application for structured storage and management of scientific experiment data. Designed to help researchers efficiently organize, track, and analyze experimental results.
 
 Visual Diagram
-Experiment
- ├─ Run 1
- │   ├─ Result 1
- │   ├─ Result 2
- │   └─ Result 3
- └─ Run 2
-     ├─ Result 1
-     └─ Result 2
++-------------------+
+|   Experiment 1    |
++-------------------+
+          │
+          ▼
+    +------------+           +------------+
+    |   Run 1    |──────────>|   Run 2    |
+    +------------+           +------------+
+       │       │                 │
+       ▼       ▼                 ▼
+  +--------+ +--------+     +--------+
+  | Result | | Result |     | Result |
+  |  1     | |  2     |     |  1     |
+  +--------+ +--------+     +--------+
+
 Experiment — main entity representing the scientific experiment
 Run — single attempt or session of the experiment
 Result — measured data from the run
