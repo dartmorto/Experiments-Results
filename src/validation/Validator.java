@@ -5,49 +5,40 @@ package validation;
  * Содержит статические методы для валидации значений,
  * используемых при создании и обновлении сущностей.
  * Принцип работы: при некорректных данных выбрасывается
- * {@link IllegalArgumentException}.
+ * IllegalArgumentException.
  * Класс не имеет состояния и не может быть инстанцирован.
  */
 public final class Validator {
 
-    /**
-     * Приватный конструктор запрещает создание экземпляров.
-     */
     private Validator() {}
 
-    /**
-     * Проверяет, что значение положительное.
-     *
-     * @param value проверяемое значение
-     * @param fieldName имя поля (для сообщения об ошибке)
-     * @throws IllegalArgumentException если value <= 0
-     */
-    public static void requirePositive(long value, String fieldName) { }
+    public static void requirePositive(long value, String fieldName) {
+        if (value <= 0) {
+            throw new IllegalArgumentException(
+                    fieldName + " должен быть положительным"
+            );
+        }
+    }
 
-    /**
-     * Проверяет, что строка не равна null и не пустая.
-     *
-     * @param value строка
-     * @param fieldName имя поля
-     * @throws IllegalArgumentException если строка пустая или null
-     */
-    public static void requireNonBlank(String value, String fieldName) { }
+    public static void requireNonBlank(String value, String fieldName) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(
+                    fieldName + " не может быть пустым"
+            );
+        }
+    }
 
-    /**
-     * Проверяет, что объект не равен null.
-     *
-     * @param obj объект
-     * @param fieldName имя поля
-     * @throws IllegalArgumentException если obj == null
-     */
-    public static void requireNotNull(Object obj, String fieldName) { }
+    public static void requireNotNull(Object obj, String fieldName) {
+        if (obj == null) {
+            throw new IllegalArgumentException(
+                    fieldName + " не может быть null"
+            );
+        }
+    }
 
-    /**
-     * Проверяет произвольное условие.
-     *
-     * @param condition условие
-     * @param message сообщение об ошибке
-     * @throws IllegalArgumentException если condition == false
-     */
-    public static void requireExists(boolean condition, String message) { }
+    public static void requireExists(boolean condition, String message) {
+        if (!condition) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 }

@@ -6,31 +6,45 @@ import java.time.Instant;
  * Класс результат измерения.
  * Содержит значения параметров и данные об измерении.
  */
-public final class Result implements Comparable<Result>{
-    /** Уникальный идентификатор результата. */
-    public  long id;
-    /** Идентификатор запуска, к которому относится этот результат. */
+public final class Result implements Comparable<Result> {
+    /**
+     * Уникальный идентификатор результата.
+     */
+    public long id;
+    /**
+     * Идентификатор запуска, к которому относится этот результат.
+     */
     public long runId;
-    /** Измеренный параметр. */
+    /**
+     * Измеренный параметр.
+     */
     public MeasurementParam param;
-    /** Значение параметра. */
+    /**
+     * Значение параметра.
+     */
     public double value;
-    /** Единица измерения параметра. */
+    /**
+     * Единица измерения параметра.
+     */
     public String unit;
-    /** Комментарий к результату измерения. */
+    /**
+     * Комментарий к результату измерения.
+     */
     public String comment;
-    /** Дата и время проведения измерения. */
+    /**
+     * Дата и время проведения измерения.
+     */
     public Instant createdAt = Instant.now();
 
     /**
      * Конструктор для создания нового результата.
      * Автоматически устанавливает текущее время в createdAt.
      *
-     * @param id уникальный идентификатор результата
-     * @param runId идентификатор запуска
-     * @param param измеренный параметр
-     * @param value значение параметра
-     * @param unit единица измерения
+     * @param id      уникальный идентификатор результата
+     * @param runId   идентификатор запуска
+     * @param param   измеренный параметр
+     * @param value   значение параметра
+     * @param unit    единица измерения
      * @param comment комментарий к результату
      */
     public Result(long id, long runId, String comment, double value,
@@ -48,16 +62,33 @@ public final class Result implements Comparable<Result>{
     public Result(long id, long runId, MeasurementParam param, double value, String unit, String s) {
     }
 
+    public long getId() {
+        return id;
+    }
+
     /**
      * Сравнивает результаты по идентификатору для сортировки по умолчанию.
      *
-     * @param o другой результат для сравнения
      * @return отрицательное число, если id меньше; 0, если равны; положительное число, если больше
      */
+
+    public long getRunId() {
+        return runId;
+    }
+
+    public MeasurementParam getParam() {
+        return param;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+
     @Override
-public int compareTo(Result o) {
-    return Long.compare(this.id, o.id);
-}
+    public int compareTo(Result o) {
+        return Long.compare(this.id, o.id);
+    }
 
     /**
      * Возвращает строковое представление результата.
@@ -65,16 +96,21 @@ public int compareTo(Result o) {
      * @return строка с информацией о результате
      */
     @Override
-public String toString() {
-    return "Result{" +
-            "id=" + id +
-            ", runId='" + runId + '\'' +
-            ", comment='" + comment + '\'' +
-            ", param='" + param + '\'' +
-            ", unit='" + unit + '\'' +
-            ", value='" + value + '\'' +
-            ", createdAt=" + createdAt +
-            '}';
+    public String toString() {
+        return "Result{" +
+                "id=" + id +
+                ", runId='" + runId + '\'' +
+                ", comment='" + comment + '\'' +
+                ", param='" + param + '\'' +
+                ", unit='" + unit + '\'' +
+                ", value='" + value + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }
-}
+
+
+
+
+
 

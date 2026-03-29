@@ -4,9 +4,9 @@ import manager.CollectionManager;
 import domain.Experiment;
 import java.util.*;
 
-
-
-
+/**
+ * Команда вывода списка всех экспериментов.
+ */
 
 public class ExpListCommand extends Command implements Registry {
 

@@ -63,13 +63,24 @@ public class Experiment implements Comparable<Experiment> {
      */
     public long getId() { return id; }
 
+    public String getName() { return name; }
+
+    public String getOwner() { return owner; }
+
+    public String getDescription() { return description; }
+
     /**
-     * Обновляет данные эксперимента.
-     *
-     * @param name новое название (если не null)
-     * @param description новое описание (если не null)
+     * Обновляет название и описание.
      */
-    public void update(String name, String description) { }
+    public void update(String name, String description) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (description != null) {
+            this.description = description;
+        }
+        this.updatedAt = Instant.now();
+    }
 
     /**
      * Сравнение экспериментов по id.

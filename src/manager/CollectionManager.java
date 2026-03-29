@@ -13,9 +13,14 @@ import validation.*;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Optional;
-import java.util.List;
 
 public class CollectionManager {
+
+    public CollectionManager() {
+        this.currentExperimentId = 1;
+        this.currentRunId = 1;
+        this.currentResultId = 1;
+    }
 
     /**
      * Коллекция экспериментов.
@@ -61,6 +66,27 @@ public class CollectionManager {
     public Experiment createExperiment(String name, String description, String owner) { return null; }
 
     /**
+     * Добавляет эксперимент в коллекцию.
+     */
+    public void addExperiment(Experiment experiment) {
+        experiments.put(experiment.getId(), experiment);
+    }
+
+    /**
+     * Заменяет эксперимент в коллекции (полная замена объекта, например после {@code exp_update}).
+     */
+    public void updateExperiment(long id, Experiment updated) {
+        Validator.requirePositive(id, "ID");
+        if (updated.getId() != id) {
+            throw new IllegalArgumentException("ID не совпадает с объектом эксперимента");
+        }
+        if (!experiments.containsKey(id)) {
+            throw new IllegalArgumentException("Эксперимент не найден");
+        }
+        experiments.put(id, updated);
+    }
+
+    /**
      * Возвращает эксперимент по id.
      *
      * @param id идентификатор
@@ -88,23 +114,6 @@ public class CollectionManager {
         
 
     /**
-     * Обновляет эксперимент.
-     */
-    public Experiment update(long id, String name, String description) {
-
-        Validator.requirePositive(id, "ID");
-
-        Experiment experiment = getById(id);
-
-        Validator.requireNonBlank(name, "Название");
-        Validator.requireNonBlank(description, "Описание");
-
-        experiment.update(name, description);
-
-        return experiment;
-    }
-
-    /**
      * Удаляет эксперимент.
      */
     public void remove(long id) {
@@ -126,6 +135,13 @@ public class CollectionManager {
      * @return созданный запуск
      */
     public Run createRun(long id, long experimentId, String name, String operator) { return null; }
+
+    /**
+     * Добавляет запуск в коллекцию.
+     */
+    public void addRun(Run run) {
+        runs.put(run.getId(), run);
+    }
 
     /**
      * Получает запуск по id.
@@ -204,6 +220,13 @@ public class CollectionManager {
     
      public Result createResult(long resId, long runId, MeasurementParam param,
                                double value, String unit, String comment) { return null;}
+
+    /**
+     * Добавляет результат в коллекцию.
+     */
+    public void addResult(Result result) {
+        results.put(result.getId(), result);
+    }
 
 
     /**

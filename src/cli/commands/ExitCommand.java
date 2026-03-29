@@ -4,6 +4,10 @@ import manager.CollectionManager;
 
 import java.util.*;
 
+/**
+ * Команда завершения работы приложения.
+ */
+
 public class ExitCommand extends Command implements Registry{
     public ExitCommand(CollectionManager manager, Scanner scanner) {super(manager, scanner);}
 

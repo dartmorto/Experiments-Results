@@ -6,9 +6,9 @@ import domain.Run;
 import java.util.*;
 import java.util.Scanner;
 
-
-
-
+/**
+ * Команда вывода списка всех запусков.
+ */
 
 public class RunListCommand extends Command implements Registry {
 

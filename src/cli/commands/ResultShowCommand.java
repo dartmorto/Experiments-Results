@@ -5,6 +5,10 @@ import manager.CollectionManager;
 
 import java.util.*;
 
+/**
+ * Команда отображения результата измерения по ID.
+ */
+
 public class ResultShowCommand extends Command implements Registry{
     public ResultShowCommand(CollectionManager manager, Scanner scanner) {
         super(manager, scanner);
@@ -17,16 +21,21 @@ public class ResultShowCommand extends Command implements Registry{
 
     @Override
     public void execute(String[] parts) {
+        long resId;
         if (parts.length < 2) {
-            throw new IllegalArgumentException("Укажите ID результата");
+            System.out.print("ID результата: ");
+            String input = scanner.nextLine();
+            cancelIfCancelled(input);
+            resId = parseId(input);
+        } else {
+            resId = parseId(parts[1]);
         }
-        long resId = parseId(parts[1]);
         Result result = manager.getResultById(resId);
-        System.out.println("ID" + result.id);
-        System.out.println("ID Пробега" + result.runId);
-        System.out.println("Параметр" + result.param);
-        System.out.println("Значение" + result.value);
-        System.out.println("Единицы Измерения" + result.unit);
+        System.out.println("ID: " + result.id);
+        System.out.println("ID запуска: " + result.runId);
+        System.out.println("Параметр: " + result.param);
+        System.out.println("Значение: " + result.value);
+        System.out.println("Единицы измерения: " + result.unit);
     }
 
     @Override

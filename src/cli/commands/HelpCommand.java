@@ -4,6 +4,10 @@ import manager.CollectionManager;
 
 import java.util.*;
 
+/**
+ * Команда вывода списка доступных команд.
+ */
+
 
 public class HelpCommand extends Command implements Registry {
 
@@ -23,7 +27,16 @@ public class HelpCommand extends Command implements Registry {
                 create_experiment - создать эксперимент
                 create_run        - создать запуск
                 create_result     - создать результат
+                exp_update        - обновить запись об эксперименте
+                exp_show          - показать эксперимент
+                run_show          - показать запуск
+                res_show          - показать результат
+                exp_list          - показать все эксперименты
+                run_list          - показать все запуски
+                exp_summary       - сводка по эксперименту
                 exit              - выход
+                Во время пошагового ввода: cancel, отмена или q — прервать команду
+
                 """);
     }
 

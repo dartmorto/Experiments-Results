@@ -7,6 +7,12 @@ import domain.*;
 import java.util.*;
 import java.util.Scanner;
 
+/**
+ * Команда создания эксперимента.
+ * Запрашивает у пользователя данные и добавляет
+ * новый эксперимент в коллекцию.
+ */
+
 public class ExpCreateCommand extends Command implements Registry {
 
     public ExpCreateCommand(CollectionManager manager, Scanner scanner) {
@@ -20,25 +26,39 @@ public class ExpCreateCommand extends Command implements Registry {
 
     @Override
     public void execute(String[] args) {
+        
+        String name;
+    while (true) {
         System.out.print("Название: ");
-        String name = scanner.nextLine();
-
-        if (name.isBlank()) {
-            System.out.println("Ошибка: имя не может быть пустым");
-            return;
-        }
+        name = scanner.nextLine();
+        cancelIfCancelled(name);
+        if (!name.isBlank()) break;
+        System.out.println("Ошибка: имя не может быть пустым");
+    }
 
         System.out.print("Описание (можно пусто): ");
         String description = scanner.nextLine();
+        cancelIfCancelled(description);
 
-        System.out.print("Владелец: ");
-        String owner = scanner.nextLine();
+        String owner;
+        while (true) {
+            System.out.print("Владелец: ");
+            owner = scanner.nextLine();
+            cancelIfCancelled(owner);
+            if (!owner.isBlank()) {
+                break;
+            }
+            System.out.println("Ошибка: имя владельца не может быть пустым");
+        }
+
         Long expId = manager.generateExperimentId();
 
         domain.Experiment exp = new Experiment(expId, name, description, owner);
 
+        manager.addExperiment(exp);
 
-        System.out.println("OK experiment_id=" + expId);
+
+        System.out.println("Добавлен экперимент. ID: " + expId + " Название: " + name);
 
 
     }

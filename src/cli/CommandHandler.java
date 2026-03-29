@@ -32,10 +32,16 @@ public class CommandHandler {
         new HelpCommand(manager, scanner).register(commands);
         new ExitCommand(manager, scanner).register(commands);
         new ExpCreateCommand(manager, scanner).register(commands);
+        new RunCreateCommand(manager, scanner).register(commands);
+        new ResultCreateCommand(manager, scanner).register(commands);
         new ExpListCommand(manager, scanner).register(commands);
         new RunListCommand(manager, scanner).register(commands);
-        new ResultCreateCommand(manager, scanner).register(commands);
+        new ResultListCommand(manager, scanner).register(commands);
+        new ExpShowCommand(manager , scanner).register(commands);
+        new RunShowCommand(manager, scanner).register(commands);
         new ResultShowCommand(manager, scanner).register(commands);
+        new ExpUpdateCommand(manager, scanner).register(commands);
+        new ExpSummaryCommand(manager, scanner).register(commands);
         }
     
 
@@ -67,6 +73,8 @@ public class CommandHandler {
 
             try {
                 command.execute(parts);
+            } catch (CommandCancelledException e) {
+                System.out.println("Команда отменена.");
             } catch (Exception e) {
                 System.out.println("Ошибка: " + e.getMessage());
             }
