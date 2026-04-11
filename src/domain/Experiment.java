@@ -8,7 +8,7 @@ import java.time.Instant;
  * информацию о названии, описании и владельце.
  * Экземпляры класса сравниваются по идентификатору.
  */
-public class Experiment implements Comparable<Experiment> {
+public final class Experiment implements Comparable<Experiment> {
 
     /**
      * Уникальный идентификатор эксперимента.
@@ -23,22 +23,21 @@ public class Experiment implements Comparable<Experiment> {
     /**
      * Описание эксперимента.
      */
-    private String description;
+    public String description;
 
     /**
      * Владелец эксперимента.
      */
-    private final String owner;
+    public final String owner;
 
     /**
      * Время создания.
      */
-    private final Instant createdAt;
-
+    public final Instant createdAt;
     /**
      * Время последнего обновления.
      */
-    private Instant updatedAt;
+    public final Instant updatedAt;
 
     /**
      * Создает новый эксперимент.
@@ -69,18 +68,6 @@ public class Experiment implements Comparable<Experiment> {
 
     public String getDescription() { return description; }
 
-    /**
-     * Обновляет название и описание.
-     */
-    public void update(String name, String description) {
-        if (name != null) {
-            this.name = name;
-        }
-        if (description != null) {
-            this.description = description;
-        }
-        this.updatedAt = Instant.now();
-    }
 
     /**
      * Сравнение экспериментов по id.
@@ -90,6 +77,10 @@ public class Experiment implements Comparable<Experiment> {
      */
     @Override
     public int compareTo(Experiment o) { return 0; }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 }
 
 

@@ -7,14 +7,15 @@ import java.time.Instant;
  * Содержит значения параметров и данные об измерении.
  */
 public final class Result implements Comparable<Result> {
+
     /**
      * Уникальный идентификатор результата.
      */
-    public long id;
+    public final long id;
     /**
      * Идентификатор запуска, к которому относится этот результат.
      */
-    public long runId;
+    public final long runId;
     /**
      * Измеренный параметр.
      */
@@ -34,7 +35,7 @@ public final class Result implements Comparable<Result> {
     /**
      * Дата и время проведения измерения.
      */
-    public Instant createdAt = Instant.now();
+    public final Instant createdAt;
 
     /**
      * Конструктор для создания нового результата.
@@ -59,9 +60,6 @@ public final class Result implements Comparable<Result> {
 
     }
 
-    public Result(long id, long runId, MeasurementParam param, double value, String unit, String s) {
-    }
-
     public long getId() {
         return id;
     }
@@ -72,14 +70,25 @@ public final class Result implements Comparable<Result> {
      * @return отрицательное число, если id меньше; 0, если равны; положительное число, если больше
      */
 
+
+    /**
+     * Получает ID запуска
+     * @return id запуска
+     */
     public long getRunId() {
         return runId;
     }
 
+    /**
+     * Получает параметры из перечня параметров
+     * @return параметры запуска
+     */
     public MeasurementParam getParam() {
         return param;
     }
 
+    /** 
+     * Получает значения*/ 
     public double getValue() {
         return value;
     }
