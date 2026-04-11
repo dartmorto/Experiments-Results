@@ -38,18 +38,19 @@ public final class Run implements Comparable<Run>{
     /**
      * Создает новый запуск.
      *
-     * @param id уникальный идентификатор
+     * @param id           уникальный идентификатор
      * @param experimentId id эксперимента
-     * @param name название запуска
-     * @param operator оператор
+     * @param name         название запуска
+     * @param operator     оператор
      */
-    public Run(long id, long experimentId, String name, String operator, Instant createdAt) {
+    public Run(long id, long experimentId, String name, String operator) {
         this.id = id;
         this.experimentId = experimentId;
         this.name = name;
         this.operator = operator;
         this.createdAt = Instant.now();
     }
+
 
     /**
      * Возвращает id запуска.
