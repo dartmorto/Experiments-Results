@@ -1,22 +1,22 @@
 package cli.commands;
 
-import domain.*;
+import domain.Experiment;
 import manager.CollectionManager;
 
-import java.util.*;
+import java.util.Scanner;
 
 /**
  * Команда обновления данных эксперимента.
  */
 
-public class ExpUpdateCommand extends Command implements Registry {
+public class ExpUpdateCommand extends Command {
 
     public ExpUpdateCommand(CollectionManager manager, Scanner scanner) {
         super(manager, scanner);
     }
 
     @Override
-    public String Name() {
+    public String name() {
         return "exp_update";
     }
 
@@ -49,10 +49,5 @@ public class ExpUpdateCommand extends Command implements Registry {
         manager.updateExperiment(id, updated);
 
         System.out.println("Эксперимент обновлен");
-    }
-
-    @Override
-    public void register(Map<String, Command> commands) {
-        commands.put(Name(), this);
     }
 }

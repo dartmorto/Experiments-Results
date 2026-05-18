@@ -1,9 +1,8 @@
 package cli.commands;
 
+import domain.Run;
 import manager.CollectionManager;
-import domain.*;
 
-import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -11,21 +10,21 @@ import java.util.Scanner;
  * Создает запуск, связанный с существующим экспериментом.
  */
 
-public class RunCreateCommand extends Command implements Registry {
+public class RunCreateCommand extends Command {
 
     public RunCreateCommand(CollectionManager manager, Scanner scanner) {
         super(manager, scanner);
     }
 
     @Override
-    public String Name() {
+    public String name() {
         return "create_run";
     }
 
     @Override
     public void execute(String[] args) {
 
-        Long experimentId;
+        long experimentId;
         while (true) {
             System.out.print("ID эксперимента: ");
             String input = scanner.nextLine();
@@ -67,17 +66,8 @@ public class RunCreateCommand extends Command implements Registry {
             System.out.println("Ошибка: оператор не может быть пустым");
         }
 
-        Long runId = manager.generateRunId();
+        Run run = manager.createRun(experimentId, name, operator);
 
-        Run run = new Run(runId, experimentId, name, operator);
-
-        manager.addRun(run);
-
-        System.out.println("Добавлен запуск. ID: " + runId + " ID эксперимента: " + experimentId);
-    }
-
-    @Override
-    public void register(Map<String, Command> commands) {
-        commands.put(Name(), this);
+        System.out.println("Добавлен запуск. ID: " + run.getId() + " ID эксперимента: " + experimentId);
     }
 }

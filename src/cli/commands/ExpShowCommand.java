@@ -1,22 +1,22 @@
 package cli.commands;
 
-import domain.*;
+import domain.Experiment;
 import manager.CollectionManager;
 
-import java.util.*;
+import java.util.Scanner;
 
 /**
  * Команда отображения информации об эксперименте по ID.
  */
 
-public class ExpShowCommand extends Command implements Registry {
+public class ExpShowCommand extends Command {
 
     public ExpShowCommand(CollectionManager manager, Scanner scanner) {
         super(manager, scanner);
     }
 
     @Override
-    public String Name() {
+    public String name() {
         return "exp_show";
     }
 
@@ -35,10 +35,5 @@ public class ExpShowCommand extends Command implements Registry {
         } catch (IllegalArgumentException e) {
             System.out.println("Эксперимент не найден");
         }
-    }
-
-    @Override
-    public void register(Map<String, Command> commands) {
-        commands.put(Name(), this);
     }
 }

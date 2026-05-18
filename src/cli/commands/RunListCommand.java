@@ -1,23 +1,22 @@
 package cli.commands;
-import cli.commands.Command;
-import manager.CollectionManager;
-import domain.Run;
 
-import java.util.*;
+import domain.Run;
+import manager.CollectionManager;
+
 import java.util.Scanner;
 
 /**
  * Команда вывода списка всех запусков.
  */
 
-public class RunListCommand extends Command implements Registry {
+public class RunListCommand extends Command {
 
     public RunListCommand(CollectionManager manager, Scanner scanner) {
         super(manager, scanner);
     }
 
     @Override
-    public String Name() {
+    public String name() {
         return "run_list";
     }
 
@@ -32,12 +31,7 @@ public class RunListCommand extends Command implements Registry {
         System.out.println("ID  Name");
 
         for (Run r : manager.getAllRuns().values()) {
-            System.out.println(r.id + "  " + r.experimentId + " " + r.name);
+            System.out.println(r.getId() + "  " + r.getExperimentId() + " " + r.getName());
         }
-    }
-
-    @Override
-    public void register(Map<String, Command> commands) {
-        commands.put(Name(), this);
     }
 }

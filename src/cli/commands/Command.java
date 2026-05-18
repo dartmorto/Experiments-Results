@@ -15,7 +15,7 @@ public abstract class Command {
         this.scanner = scanner;
     }
 
-    public abstract String Name();
+    public abstract String name();
 
     public abstract void execute(String[] args);
 

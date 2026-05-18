@@ -1,10 +1,8 @@
 package cli.commands;
 
-import cli.commands.Command;
+import domain.Experiment;
 import manager.CollectionManager;
-import domain.*;
 
-import java.util.*;
 import java.util.Scanner;
 
 /**
@@ -13,14 +11,14 @@ import java.util.Scanner;
  * новый эксперимент в коллекцию.
  */
 
-public class ExpCreateCommand extends Command implements Registry {
+public class ExpCreateCommand extends Command {
 
     public ExpCreateCommand(CollectionManager manager, Scanner scanner) {
         super(manager, scanner);
     }
 
     @Override
-    public String Name() {
+    public String name() {
         return "create_experiment";
     }
 
@@ -28,13 +26,15 @@ public class ExpCreateCommand extends Command implements Registry {
     public void execute(String[] args) {
         
         String name;
-    while (true) {
-        System.out.print("Название: ");
-        name = scanner.nextLine();
-        cancelIfCancelled(name);
-        if (!name.isBlank()) break;
-        System.out.println("Ошибка: имя не может быть пустым");
-    }
+        while (true) {
+            System.out.print("Название: ");
+            name = scanner.nextLine();
+            cancelIfCancelled(name);
+            if (!name.isBlank()) {
+                break;
+            }
+            System.out.println("Ошибка: имя не может быть пустым");
+        }
 
         System.out.print("Описание (можно пусто): ");
         String description = scanner.nextLine();
@@ -51,21 +51,12 @@ public class ExpCreateCommand extends Command implements Registry {
             System.out.println("Ошибка: имя владельца не может быть пустым");
         }
 
-        Long expId = manager.generateExperimentId();
+        Experiment exp = manager.createExperiment(name, description, owner);
+        long expId = exp.getId();
 
-        domain.Experiment exp = new Experiment(expId, name, description, owner);
-
-        manager.addExperiment(exp);
-
-
-        System.out.println("Добавлен экперимент. ID: " + expId + " Название: " + name);
+        System.out.println("Добавлен эксперимент. ID: " + expId + " Название: " + name);
 
 
-    }
-
-    @Override
-    public void register(Map<String, Command> commands) {
-        commands.put(Name(), this);
     }
 
 

@@ -1,16 +1,15 @@
 package cli.commands;
 
+import domain.Result;
 import manager.CollectionManager;
-import domain.*;
 
-import java.util.Map;
 import java.util.Scanner;
 
 /**
  * Команда вывода списка всех результатов измерений.
  * Отображает ID результата, ID запуска, параметр и значение.
  */
-public class ResultListCommand extends Command implements Registry {
+public class ResultListCommand extends Command {
 
     public ResultListCommand(CollectionManager manager, Scanner scanner) {
         super(manager, scanner);
@@ -22,7 +21,7 @@ public class ResultListCommand extends Command implements Registry {
      * @return строка команды
      */
     @Override
-    public String Name() {
+    public String name() {
         return "res_list";
     }
 
@@ -55,9 +54,5 @@ public class ResultListCommand extends Command implements Registry {
      *
      * @param commands карта команд
      */
-    @Override
-    public void register(Map<String, Command> commands) {
-        commands.put(Name(), this);
-    }
 }
 

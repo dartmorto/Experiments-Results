@@ -1,9 +1,16 @@
 package cli.commands;
 
+import domain.MeasurementParam;
+import domain.Result;
+import domain.Run;
 import manager.CollectionManager;
-import domain.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Команда вывода сводной статистики по эксперименту.
@@ -11,14 +18,14 @@ import java.util.*;
  * на основе всех запусков эксперимента.
  */
 
-public class ExpSummaryCommand extends Command implements Registry {
+public class ExpSummaryCommand extends Command {
 
     public ExpSummaryCommand(CollectionManager manager, Scanner scanner) {
         super(manager, scanner);
     }
 
     @Override
-    public String Name() {
+    public String name() {
         return "exp_summary";
     }
 
@@ -51,11 +58,9 @@ public class ExpSummaryCommand extends Command implements Registry {
         for (Run run : manager.getAllRuns().values()) {
             if (run.getExperimentId() != expId) continue;
 
-            for (Result res : manager.getAllResults().values()) {
-                if (res.runId != run.getId()) continue;
-
-                stats.computeIfAbsent(res.param, k -> new ArrayList<>())
-                        .add(res.value);
+            for (Result res : manager.getResultsByRunId(run.getId()).values()) {
+                stats.computeIfAbsent(res.getParam(), k -> new ArrayList<>())
+                        .add(res.getValue());
             }
         }
 
@@ -64,11 +69,11 @@ public class ExpSummaryCommand extends Command implements Registry {
             return;
         }
 
-        stats.keySet().stream()
-                .sorted()
-                .forEach(param -> {
-
-                    List<Double> values = stats.get(param);
+        stats.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> {
+                    MeasurementParam param = entry.getKey();
+                    List<Double> values = entry.getValue();
 
                     double min = Collections.min(values);
                     double max = Collections.max(values);
@@ -86,10 +91,5 @@ public class ExpSummaryCommand extends Command implements Registry {
                             avg
                     );
                 });
-    }
-
-    @Override
-    public void register(Map<String, Command> commands) {
-        commands.put(Name(), this);
     }
 }

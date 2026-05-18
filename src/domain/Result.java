@@ -1,109 +1,72 @@
 package domain;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 /**
- * Класс результат измерения.
- * Содержит значения параметров и данные об измерении.
+ * Measurement result linked to a run by runId.
  */
-public final class Result implements Comparable<Result> {
+public final class Result implements Comparable<Result>, Serializable {
 
-    /**
-     * Уникальный идентификатор результата.
-     */
-    public final long id;
-    /**
-     * Идентификатор запуска, к которому относится этот результат.
-     */
-    public final long runId;
-    /**
-     * Измеренный параметр.
-     */
-    public MeasurementParam param;
-    /**
-     * Значение параметра.
-     */
-    public double value;
-    /**
-     * Единица измерения параметра.
-     */
-    public String unit;
-    /**
-     * Комментарий к результату измерения.
-     */
-    public String comment;
-    /**
-     * Дата и время проведения измерения.
-     */
-    public final Instant createdAt;
+    private static final long serialVersionUID = 204679L;
 
-    /**
-     * Конструктор для создания нового результата.
-     * Автоматически устанавливает текущее время в createdAt.
-     *
-     * @param id      уникальный идентификатор результата
-     * @param runId   идентификатор запуска
-     * @param param   измеренный параметр
-     * @param value   значение параметра
-     * @param unit    единица измерения
-     * @param comment комментарий к результату
-     */
-    public Result(long id, long runId, String comment, double value,
-                  String unit, Instant createdAt, MeasurementParam param) {
+    private final long id;
+    private final long runId;
+    private final MeasurementParam param;
+    private final double value;
+    private final String unit;
+    private final String comment;
+    private final Instant createdAt;
+
+    public Result(long id,
+                  long runId,
+                  String comment,
+                  double value,
+                  String unit,
+                  Instant createdAt,
+                  MeasurementParam param) {
         this.id = id;
         this.runId = runId;
-        this.param = param;
         this.comment = comment;
         this.value = value;
         this.unit = unit;
-        this.createdAt = Instant.now();
-
+        this.createdAt = createdAt == null ? Instant.now() : createdAt;
+        this.param = param;
     }
 
     public long getId() {
         return id;
     }
 
-    /**
-     * Сравнивает результаты по идентификатору для сортировки по умолчанию.
-     *
-     * @return отрицательное число, если id меньше; 0, если равны; положительное число, если больше
-     */
-
-
-    /**
-     * Получает ID запуска
-     * @return id запуска
-     */
     public long getRunId() {
         return runId;
     }
 
-    /**
-     * Получает параметры из перечня параметров
-     * @return параметры запуска
-     */
     public MeasurementParam getParam() {
         return param;
     }
 
-    /** 
-     * Получает значения*/ 
     public double getValue() {
         return value;
     }
 
-
-    @Override
-    public int compareTo(Result o) {
-        return Long.compare(this.id, o.id);
+    public String getUnit() {
+        return unit;
     }
 
-    /**
-     * Возвращает строковое представление результата.
-     *
-     * @return строка с информацией о результате
-     */
+    public String getComment() {
+        return comment;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    @Override
+    public int compareTo(Result other) {
+        return Long.compare(id, other.id);
+    }
+
     @Override
     public String toString() {
         return "Result{" +
@@ -117,9 +80,3 @@ public final class Result implements Comparable<Result> {
                 '}';
     }
 }
-
-
-
-
-
-

@@ -1,86 +1,66 @@
 package domain;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 /**
- * Класс эксперимент.
- * Эксперимент является основной сущностью системы и содержит
- * информацию о названии, описании и владельце.
- * Экземпляры класса сравниваются по идентификатору.
+ * Experiment is the root entity that stores name, description and owner.
  */
-public final class Experiment implements Comparable<Experiment> {
+public final class Experiment implements Comparable<Experiment>, Serializable {
 
-    /**
-     * Уникальный идентификатор эксперимента.
-     */
-    public final long id;
+    private static final long serialVersionUID = 204678L;
 
-    /**
-     * Название эксперимента.
-     */
-    public String name;
+    private final long id;
+    private final String name;
+    private final String description;
+    private final String owner;
+    private final Instant createdAt;
+    private final Instant updatedAt;
 
-    /**
-     * Описание эксперимента.
-     */
-    public String description;
-
-    /**
-     * Владелец эксперимента.
-     */
-    public final String owner;
-
-    /**
-     * Время создания.
-     */
-    public final Instant createdAt;
-    /**
-     * Время последнего обновления.
-     */
-    public final Instant updatedAt;
-
-    /**
-     * Создает новый эксперимент.
-     *
-     * @param id уникальный идентификатор
-     * @param name название
-     * @param description описание
-     * @param owner владелец
-     */
     public Experiment(long id, String name, String description, String owner) {
+        this(id, name, description, owner, Instant.now(), Instant.now());
+    }
+
+    public Experiment(long id,
+                      String name,
+                      String description,
+                      String owner,
+                      Instant createdAt,
+                      Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.owner = owner;
-        this.createdAt = Instant.now();
-        this.updatedAt = Instant.now();
+        this.createdAt = createdAt == null ? Instant.now() : createdAt;
+        this.updatedAt = updatedAt == null ? this.createdAt : updatedAt;
     }
 
-    /**
-     * Возвращает идентификатор эксперимента.
-     * @return id
-     */
-    public long getId() { return id; }
+    public long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public String getOwner() { return owner; }
+    public String getDescription() {
+        return description;
+    }
 
-    public String getDescription() { return description; }
-
-
-    /**
-     * Сравнение экспериментов по id.
-     *
-     * @param o другой эксперимент
-     * @return результат сравнения
-     */
-    @Override
-    public int compareTo(Experiment o) { return 0; }
+    public String getOwner() {
+        return owner;
+    }
 
     public Instant getCreatedAt() {
         return createdAt;
     }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    @Override
+    public int compareTo(Experiment other) {
+        return Long.compare(id, other.id);
+    }
 }
-
-

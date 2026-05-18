@@ -1,21 +1,21 @@
 package cli.commands;
-import cli.commands.Command;
+
 import manager.CollectionManager;
 
-import java.util.*;
+import java.util.Scanner;
 
 /**
  * Команда вывода списка доступных команд.
  */
 
 
-public class HelpCommand extends Command implements Registry {
+public class HelpCommand extends Command {
 
     public HelpCommand(CollectionManager manager, Scanner scanner) {
         super(manager, scanner);
     }
     @Override
-    public String Name() {
+    public String name() {
 
         return "help";
     }
@@ -33,16 +33,15 @@ public class HelpCommand extends Command implements Registry {
                 res_show          - показать результат
                 exp_list          - показать все эксперименты
                 run_list          - показать все запуски
+                res_list          - показать все результаты
                 exp_summary       - сводка по эксперименту
+                save <path>       - сохранить данные в файл
+                load <path>       - загрузить данные из файла
+                history           - история команд
                 exit              - выход
                 Во время пошагового ввода: cancel, отмена или q — прервать команду
 
                 """);
-    }
-
-    @Override
-    public void register(Map<String, Command> commands) {
-        commands.put(Name(), this);
     }
 
 

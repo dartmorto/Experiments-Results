@@ -28,4 +28,10 @@ c:\Users\user\IdeaProjects\Experiments-Results\src\storage\FileStorage.java
 c:\Users\user\IdeaProjects\Experiments-Results\src\storage\FileValidator.java
 c:\Users\user\IdeaProjects\Experiments-Results\src\storage\StorageMerger.java
 c:\Users\user\IdeaProjects\Experiments-Results\src\storage\StorageData.java
+c:\Users\user\IdeaProjects\Experiments-Results\src\ui\AdditionHistory.java
+c:\Users\user\IdeaProjects\Experiments-Results\src\ui\BackgroundWorker.java
+c:\Users\user\IdeaProjects\Experiments-Results\src\ui\ExperimentTables.java
+c:\Users\user\IdeaProjects\Experiments-Results\src\ui\ExperimentResultsApp.java
+c:\Users\user\IdeaProjects\Experiments-Results\src\ui\OperationForms.java
+c:\Users\user\IdeaProjects\Experiments-Results\src\ui\UiDialogs.java
 c:\Users\user\IdeaProjects\Experiments-Results\src\validation\Validator.java

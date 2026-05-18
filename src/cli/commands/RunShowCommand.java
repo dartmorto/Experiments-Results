@@ -1,22 +1,22 @@
 package cli.commands;
 
-import domain.*;
+import domain.Run;
 import manager.CollectionManager;
 
-import java.util.*;
+import java.util.Scanner;
 
 /**
  * Команда отображения информации о запуске по ID.
  */
 
-public class RunShowCommand extends Command implements Registry {
+public class RunShowCommand extends Command {
 
     public RunShowCommand(CollectionManager manager, Scanner scanner) {
         super(manager, scanner);
     }
 
     @Override
-    public String Name() {
+    public String name() {
         return "run_show";
     }
 
@@ -36,11 +36,6 @@ public class RunShowCommand extends Command implements Registry {
 
         System.out.println("ID: " + run.getId());
         System.out.println("Experiment ID: " + run.getExperimentId());
-        System.out.println("Название: " + run.name);
-    }
-
-    @Override
-    public void register(Map<String, Command> commands) {
-        commands.put(Name(), this);
+        System.out.println("Название: " + run.getName());
     }
 }

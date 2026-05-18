@@ -1,21 +1,22 @@
 package cli.commands;
-import cli.commands.Command;
-import manager.CollectionManager;
+
 import domain.Experiment;
-import java.util.*;
+import manager.CollectionManager;
+
+import java.util.Scanner;
 
 /**
  * Команда вывода списка всех экспериментов.
  */
 
-public class ExpListCommand extends Command implements Registry {
+public class ExpListCommand extends Command {
 
     public ExpListCommand(CollectionManager manager, Scanner scanner) {
         super(manager, scanner);
     }
 
     @Override
-    public String Name() {
+    public String name() {
         return "exp_list";
     }
 
@@ -30,14 +31,9 @@ public class ExpListCommand extends Command implements Registry {
         System.out.println("ID  Name");
 
         for (Experiment e : manager.getAllExperiments().values()) {
-            System.out.println(e.id + "  " + e.name);
+            System.out.println(e.getId() + "  " + e.getName());
         }
 
 
-    }
-
-    @Override
-    public void register(Map<String, Command> commands) {
-        commands.put(Name(), this);
     }
 }

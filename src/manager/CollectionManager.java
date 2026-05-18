@@ -1,82 +1,71 @@
-/**
- * Класс управления коллекциями.
- * Отвечает за создание, хранение, получение и удаление:
- *    экспериментов
- *     их запусков
- *     результатов
- * Для хранения используется {@link TreeMap}, что обеспечивает
- * автоматическую сортировку по идентификатору.
- */
 package manager;
-import domain.*;
-import validation.*;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Optional;
 
+import domain.Experiment;
+import domain.MeasurementParam;
+import domain.Result;
+import domain.Run;
+import validation.Validator;
+
+import java.time.Instant;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
+/**
+ * Manages experiments, runs and measurement results in memory.
+ */
 public class CollectionManager {
 
-    public CollectionManager() {
-        this.currentExperimentId = 1;
-        this.currentRunId = 1;
-        this.currentResultId = 1;
-    }
-
-    /**
-     * Коллекция экспериментов.
-     */
-    private final Map<Long, Experiment> experiments = new TreeMap<>();;
-
-    /**
-     * Коллекция запусков.
-     */
+    private final Map<Long, Experiment> experiments = new TreeMap<>();
     private final Map<Long, Run> runs = new TreeMap<>();
-
-    /**
-     * Коллекция результатов.
-     */
     private final Map<Long, Result> results = new TreeMap<>();
 
-    /**
-     * Счетчик идентификаторов.
-     */
-    private long currentExperimentId;
-    private long currentRunId;
-    private long currentResultId;
+    private long currentExperimentId = 1;
+    private long currentRunId = 1;
+    private long currentResultId = 1;
 
-
-
-    /**
-     * Генерирует уникальный идентификатор.
-     *
-     * @return новый id
-     */
-    public Long generateExperimentId() { return currentExperimentId++; }
-    public Long generateRunId() { return currentRunId++; }
-    public Long generateResultId() { return currentResultId++; }
-
-    /**
-     * Создает новый эксперимент.
-     *
-     * @param name название
-     * @param description описание
-     * @param owner владелец
-     * @return созданный эксперимент
-     */
-    public Experiment createExperiment(String name, String description, String owner) { return null; }
-
-    /**
-     * Добавляет эксперимент в коллекцию.
-     */
-    public void addExperiment(Experiment experiment) {
-        experiments.put(experiment.getId(), experiment);
+    private long generateExperimentId() {
+        return currentExperimentId++;
     }
 
-    /**
-     * Заменяет эксперимент в коллекции (полная замена объекта, например после {@code exp_update}).
-     */
+    private long generateRunId() {
+        return currentRunId++;
+    }
+
+    private long generateResultId() {
+        return currentResultId++;
+    }
+
+    public Experiment createExperiment(String name, String description, String owner) {
+        Validator.requireNonBlank(name, "Название");
+        Validator.requireNonBlank(owner, "Владелец");
+
+        Experiment experiment = new Experiment(
+                generateExperimentId(),
+                name.trim(),
+                description == null ? "" : description.trim(),
+                owner.trim()
+        );
+        addExperiment(experiment);
+        return experiment;
+    }
+
+    public void addExperiment(Experiment experiment) {
+        Validator.requireNotNull(experiment, "Эксперимент");
+        Validator.requirePositive(experiment.getId(), "ID эксперимента");
+        Validator.requireExists(!experiments.containsKey(experiment.getId()), "Эксперимент с таким ID уже существует");
+
+        long nextExperimentId = nextAfter(currentExperimentId, experiment.getId(), "эксперимента");
+        experiments.put(experiment.getId(), experiment);
+        currentExperimentId = nextExperimentId;
+    }
+
     public void updateExperiment(long id, Experiment updated) {
         Validator.requirePositive(id, "ID");
+        Validator.requireNotNull(updated, "Эксперимент");
+        Validator.requireNonBlank(updated.getName(), "Название");
+        Validator.requireNonBlank(updated.getOwner(), "Владелец");
+
         if (updated.getId() != id) {
             throw new IllegalArgumentException("ID не совпадает с объектом эксперимента");
         }
@@ -86,202 +75,226 @@ public class CollectionManager {
         experiments.put(id, updated);
     }
 
-    /**
-     * Возвращает эксперимент по id.
-     *
-     * @param id идентификатор
-     * @return эксперимент
-     * @throws IllegalArgumentException если не найден
-     */
-    public Experiment getExperiment(long id) { return null; }
+    public Experiment getExperiment(long id) {
+        return getById(id);
+    }
 
-
-     /**
-     * Получает эксперимент по id.
-     */
     public Experiment getById(long id) {
-
         Validator.requirePositive(id, "ID");
-
         return Optional.ofNullable(experiments.get(id))
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Эксперимент не найден"));}
+                .orElseThrow(() -> new IllegalArgumentException("Эксперимент не найден"));
+    }
 
-    /**
-     * Возвращает все эксперименты.
-     */
-    public Map<Long, Experiment> getAllExperiments() { return experiments; }
-        
+    public Map<Long, Experiment> getAllExperiments() {
+        return new TreeMap<>(experiments);
+    }
 
-    /**
-     * Удаляет эксперимент.
-     */
+    public void replaceData(Map<Long, Experiment> loadedExperiments,
+                            Map<Long, Run> loadedRuns,
+                            Map<Long, Result> loadedResults) {
+        Validator.requireNotNull(loadedExperiments, "Эксперименты");
+        Validator.requireNotNull(loadedRuns, "Запуски");
+        Validator.requireNotNull(loadedResults, "Результаты");
+
+        TreeMap<Long, Experiment> experimentCopy = new TreeMap<>(loadedExperiments);
+        TreeMap<Long, Run> runCopy = new TreeMap<>(loadedRuns);
+        TreeMap<Long, Result> resultCopy = new TreeMap<>(loadedResults);
+
+        currentExperimentId = nextId(experimentCopy, "эксперимента");
+        currentRunId = nextId(runCopy, "запуска");
+        currentResultId = nextId(resultCopy, "результата");
+
+        experiments.clear();
+        experiments.putAll(experimentCopy);
+        runs.clear();
+        runs.putAll(runCopy);
+        results.clear();
+        results.putAll(resultCopy);
+    }
+
     public void remove(long id) {
+        removeExperiment(id);
+    }
 
+    public void removeExperiment(long id) {
         Validator.requirePositive(id, "ID");
 
         if (experiments.remove(id) == null) {
             throw new IllegalArgumentException("Эксперимент не найден");
         }
+        runs.values().removeIf(run -> run.getExperimentId() == id);
+        results.values().removeIf(result -> !runs.containsKey(result.getRunId()));
     }
 
-
-    /**
-     * Создает новый запуск.
-     * @param id уникальный идентификатор
-     * @param experimentId id эксперимента
-     * @param name название
-     * @param operator оператор
-     * @return созданный запуск
-     */
-    public Run createRun(long id, long experimentId, String name, String operator) { return null; }
-
-    /**
-     * Добавляет запуск в коллекцию.
-     */
-    public void addRun(Run run) {
-        runs.put(run.getId(), run);
+    public Run createRun(long experimentId, String name, String operator) {
+        return createRun(generateRunId(), experimentId, name, operator);
     }
 
-    /**
-     * Получает запуск по id.
-     */
-    public Run getRunById(long id) {
-
+    private Run createRun(long id, long experimentId, String name, String operator) {
         Validator.requirePositive(id, "ID");
-
-        return Optional.ofNullable(runs.get(id))
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Эксперимент не найден"));}
-                    
-    /**
-     * Возвращает список запусков по id эксперимента.
-     *
-     * @param experimentId id эксперимента
-     * @return список запусков этого эксперимента
-     */
-    public Map<Long, Run> getRunsByExperimentId(long experimentId) {
         Validator.requirePositive(experimentId, "ID эксперимента");
-
-        Map<Long, Run> result = new TreeMap<>();
-        for (Run run : runs.values()) {
-            if (run.getExperimentId() == experimentId) {
-                result.put(run.getId(), run);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Обновляет запуск.
-     */
-    public Run updateRun(long id, String name, String operator) {
-
-        Validator.requirePositive(id, "ID");
-
-        Run run = getRunById(id);
-
         Validator.requireNonBlank(name, "Название");
         Validator.requireNonBlank(operator, "Оператор");
+        Validator.requireExists(experiments.containsKey(experimentId), "Эксперимент не найден");
+        Validator.requireExists(!runs.containsKey(id), "Запуск с таким ID уже существует");
 
+        Run run = new Run(id, experimentId, name.trim(), operator.trim());
+        addRun(run);
         return run;
     }
 
-    /**
-     * Возвращает все запуски.
-     */
+    public void addRun(Run run) {
+        Validator.requireNotNull(run, "Запуск");
+        Validator.requirePositive(run.getId(), "ID запуска");
+        Validator.requirePositive(run.getExperimentId(), "ID эксперимента");
+        Validator.requireExists(experiments.containsKey(run.getExperimentId()), "Эксперимент не найден");
+        Validator.requireExists(!runs.containsKey(run.getId()), "Запуск с таким ID уже существует");
+
+        long nextRunId = nextAfter(currentRunId, run.getId(), "запуска");
+        runs.put(run.getId(), run);
+        currentRunId = nextRunId;
+    }
+
+    public Run getRunById(long id) {
+        Validator.requirePositive(id, "ID");
+        return Optional.ofNullable(runs.get(id))
+                .orElseThrow(() -> new IllegalArgumentException("Запуск не найден"));
+    }
+
+    public Map<Long, Run> getRunsByExperimentId(long experimentId) {
+        Validator.requirePositive(experimentId, "ID эксперимента");
+
+        Map<Long, Run> selectedRuns = new TreeMap<>();
+        for (Run run : runs.values()) {
+            if (run.getExperimentId() == experimentId) {
+                selectedRuns.put(run.getId(), run);
+            }
+        }
+        return selectedRuns;
+    }
+
+    public Run updateRun(long id, String name, String operator) {
+        Validator.requirePositive(id, "ID");
+        Validator.requireNonBlank(name, "Название");
+        Validator.requireNonBlank(operator, "Оператор");
+
+        Run run = getRunById(id);
+        Run updated = new Run(run.getId(), run.getExperimentId(), name.trim(), operator.trim());
+        runs.put(id, updated);
+        return updated;
+    }
+
     public Map<Long, Run> getAllRuns() {
         return new TreeMap<>(runs);
     }
 
-    /**
-     * Удаляет запуск.
-     */
     public void removeRun(long id) {
-
         Validator.requirePositive(id, "ID");
 
-        if (experiments.remove(id) == null) {
-            throw new IllegalArgumentException("Эксперимент не найден");
+        if (runs.remove(id) == null) {
+            throw new IllegalArgumentException("Запуск не найден");
         }
+        results.values().removeIf(result -> result.getRunId() == id);
     }
-    /**
-     * Создает результат измерения.
-     *@param id id измерений
-     * @param runId id запуска
-     * @param param параметр
-     * @param value значение
-     * @param unit единица измерения
-     * @param comment комментарий
-     * @return результат
-     */
 
-    
-    
-     public Result createResult(long resId, long runId, MeasurementParam param,
-                               double value, String unit, String comment) { return null;}
+    public Result createResult(long runId,
+                               MeasurementParam param,
+                               double value,
+                               String unit,
+                               String comment) {
+        return createResult(generateResultId(), runId, param, value, unit, comment);
+    }
 
-    /**
-     * Добавляет результат в коллекцию.
-     */
+    private Result createResult(long resultId,
+                                long runId,
+                                MeasurementParam param,
+                                double value,
+                                String unit,
+                                String comment) {
+        Validator.requirePositive(resultId, "ID результата");
+        Validator.requirePositive(runId, "ID запуска");
+        Validator.requireNotNull(param, "Параметр");
+        Validator.requireNonBlank(unit, "Единица измерения");
+        Validator.requireExists(!results.containsKey(resultId), "Результат с таким ID уже существует");
+        getRunById(runId);
+
+        Result result = new Result(
+                resultId,
+                runId,
+                comment == null ? "" : comment.trim(),
+                value,
+                unit.trim(),
+                Instant.now(),
+                param
+        );
+        addResult(result);
+        return result;
+    }
+
     public void addResult(Result result) {
+        Validator.requireNotNull(result, "Результат");
+        Validator.requirePositive(result.getId(), "ID результата");
+        Validator.requirePositive(result.getRunId(), "ID запуска");
+        Validator.requireExists(runs.containsKey(result.getRunId()), "Запуск не найден");
+        Validator.requireExists(!results.containsKey(result.getId()), "Результат с таким ID уже существует");
+
+        long nextResultId = nextAfter(currentResultId, result.getId(), "результата");
         results.put(result.getId(), result);
+        currentResultId = nextResultId;
     }
 
-
-    /**
-     * Возвращает все результатов
-     */                           
     public Map<Long, Result> getAllResults() {
         return new TreeMap<>(results);
     }
 
-
-    /**
-    Получает результаты по id
-     */                         
-    public Result getResultById(long id) {
-
-        Validator.requirePositive(id, "ID");
-
-        return Optional.ofNullable(results.get(id))
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Результат не найден"));
-    }
-
-    
-
-    /**
-     * Получает результат по id запуска
-     * @param runId
-     * @return результат по запуску
-     */
-    public Result getResultByRunId(long runId) {
+    public Map<Long, Result> getResultsByRunId(long runId) {
         Validator.requirePositive(runId, "ID запуска");
+
+        Map<Long, Result> selectedResults = new TreeMap<>();
         for (Result result : results.values()) {
-            if (result.runId == runId) {
-                return result;
+            if (result.getRunId() == runId) {
+                selectedResults.put(result.getId(), result);
             }
         }
-        throw new IllegalArgumentException("Результат не найден");
+        return selectedResults;
     }
 
+    public Result getResultById(long id) {
+        Validator.requirePositive(id, "ID");
+        return Optional.ofNullable(results.get(id))
+                .orElseThrow(() -> new IllegalArgumentException("Результат не найден"));
+    }
+
+    public void removeResult(long id) {
+        Validator.requirePositive(id, "ID");
+
+        if (results.remove(id) == null) {
+            throw new IllegalArgumentException("Результат не найден");
+        }
+    }
+
+    public Result getResultByRunId(long runId) {
+        return getResultsByRunId(runId).values().stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Результат не найден"));
+    }
+
+    private long nextId(Map<Long, ?> data, String entityName) {
+        if (data.isEmpty()) {
+            return 1;
+        }
+
+        long maxId = new TreeMap<>(data).lastKey();
+        if (maxId == Long.MAX_VALUE) {
+            throw new IllegalArgumentException("ID " + entityName + " достиг максимального значения");
+        }
+        return maxId + 1;
+    }
+
+    private long nextAfter(long currentId, long usedId, String entityName) {
+        if (usedId == Long.MAX_VALUE) {
+            throw new IllegalArgumentException("ID " + entityName + " достиг максимального значения");
+        }
+        return Math.max(currentId, usedId + 1);
+    }
 }
-
-
-
-    
-
-        
-
-
-
-
-
-
-
-
-
-
-
-

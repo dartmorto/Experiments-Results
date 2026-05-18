@@ -51,3 +51,28 @@ Java (Core)
 Collections framework for structured storage
 Exception handling and validation libraries
 Optional: JSON/XML for data persistence
+
+## JavaFX UI
+
+JavaFX UI entry point: `ui.Launcher`.
+
+Recommended Maven launch:
+
+```text
+mvn javafx:run
+```
+
+Maven downloads JavaFX automatically, so you do not need to pass `--module-path` manually.
+
+Compile and run it after adding JavaFX SDK:
+
+```text
+javac --module-path C:\path\to\javafx-sdk\lib --add-modules javafx.controls -d out @javafx-sources.txt
+java --module-path C:\path\to\javafx-sdk\lib --add-modules javafx.controls -cp out ui.Launcher
+```
+
+You can pass a data file at startup:
+
+```text
+java --module-path C:\path\to\javafx-sdk\lib --add-modules javafx.controls -cp out ui.Launcher data.bin
+```

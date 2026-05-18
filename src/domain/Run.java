@@ -1,79 +1,55 @@
 package domain;
+
+import java.io.Serializable;
 import java.time.Instant;
 
 /**
- * Класс запуск эксперимента.
- * Каждый запуск связан с конкретным экспериментом
- * через идентификатор experimentId.
+ * Experiment run linked to an experiment by experimentId.
  */
-public final class Run implements Comparable<Run>{
+public final class Run implements Comparable<Run>, Serializable {
 
-    /**
-     * Уникальный идентификатор запуска.
-     */
-    public final long id;
+    private static final long serialVersionUID = 10734L;
 
-    /**
-     * Идентификатор эксперимента.
-     */
-    public final long experimentId;
+    private final long id;
+    private final long experimentId;
+    private final String name;
+    private final String operator;
+    private final Instant createdAt;
 
-    /**
-     * Название запуска.
-     */
-    public final String name;
-
-    /**
-     * Имя оператора
-     */
-
-    public final String operator;
-
-    /**
-     * Время создания.
-     */
-    public final Instant createdAt;
-
-
-    /**
-     * Создает новый запуск.
-     *
-     * @param id           уникальный идентификатор
-     * @param experimentId id эксперимента
-     * @param name         название запуска
-     * @param operator     оператор
-     */
     public Run(long id, long experimentId, String name, String operator) {
+        this(id, experimentId, name, operator, Instant.now());
+    }
+
+    public Run(long id, long experimentId, String name, String operator, Instant createdAt) {
         this.id = id;
         this.experimentId = experimentId;
         this.name = name;
         this.operator = operator;
-        this.createdAt = Instant.now();
+        this.createdAt = createdAt == null ? Instant.now() : createdAt;
     }
 
+    public long getId() {
+        return id;
+    }
 
-    /**
-     * Возвращает id запуска.
-     *
-     * @return id
-     */
-    public long getId() { return id; }
+    public long getExperimentId() {
+        return experimentId;
+    }
 
-    /**
-     * Возвращает id эксперимента.
-     *
-     * @return experimentId
-     */
-    public long getExperimentId() { return experimentId; }
+    public String getName() {
+        return name;
+    }
 
+    public String getOperator() {
+        return operator;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 
     @Override
-    public int compareTo(Run o) {
-        return Long.compare(this.id, o.id);
+    public int compareTo(Run other) {
+        return Long.compare(id, other.id);
     }
-    }
-
-
-
-
-
+}
