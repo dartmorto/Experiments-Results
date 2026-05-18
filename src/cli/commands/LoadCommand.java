@@ -29,7 +29,7 @@ public class LoadCommand extends Command {
 
         try {
             storage.load(manager, path);
-            System.out.println("Данные загружены и объединены: " + path);
+            System.out.println("Данные загружены: " + path);
         } catch (Exception e) {
             System.out.println("Ошибка загрузки: " + e.getMessage());
         }

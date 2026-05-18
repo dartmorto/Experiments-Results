@@ -29,7 +29,7 @@ public class SaveCommand extends Command {
 
         try {
             storage.save(manager, path);
-            System.out.println("Данные сохранены и объединены: " + path);
+            System.out.println("Данные сохранены: " + path);
         } catch (Exception e) {
             System.out.println("Ошибка сохранения: " + e.getMessage());
         }

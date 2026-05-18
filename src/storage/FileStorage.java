@@ -24,7 +24,6 @@ import java.util.Objects;
 public final class FileStorage {
 
     private final FileValidator validator = new FileValidator();
-    private final StorageMerger merger = new StorageMerger();
 
     public void save(CollectionManager manager, String filePath) throws IOException {
         save(manager, Path.of(requirePath(filePath)));
@@ -45,15 +44,10 @@ public final class FileStorage {
         try (FileChannel channel = FileChannel.open(
                 path,
                 StandardOpenOption.CREATE,
-                StandardOpenOption.READ,
                 StandardOpenOption.WRITE
         );
-             FileLock ignored = channel.lock()) {
-            StorageData fileData = readLocked(channel);
-            StorageData merged = merger.merge(fileData, localData);
-            validator.validate(merged);
-            writeLocked(channel, merged);
-            manager.replaceData(merged.getExperiments(), merged.getRuns(), merged.getResults());
+              FileLock ignored = channel.lock()) {
+            writeLocked(channel, localData);
         }
     }
 
@@ -64,13 +58,8 @@ public final class FileStorage {
     public void load(CollectionManager manager, Path filePath) throws IOException {
         Objects.requireNonNull(manager, "manager");
 
-        StorageData fileData = read(filePath);
-        StorageData localData = StorageData.from(manager);
-        validator.validate(localData);
-
-        StorageData merged = merger.merge(fileData, localData);
-        validator.validate(merged);
-        manager.replaceData(merged.getExperiments(), merged.getRuns(), merged.getResults());
+        StorageData loadedData = read(filePath);
+        manager.replaceData(loadedData.getExperiments(), loadedData.getRuns(), loadedData.getResults());
     }
 
     private StorageData read(Path filePath) throws IOException {

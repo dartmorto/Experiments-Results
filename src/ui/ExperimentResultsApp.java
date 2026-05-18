@@ -80,7 +80,7 @@ public final class ExperimentResultsApp extends Application {
         stage.setMinHeight(600);
         stage.setScene(scene);
         stage.show();
-        setStatus("Press Load to load data from source.");
+        setStatus("Press Refresh to reload data from source.");
     }
 
     @Override
@@ -99,9 +99,9 @@ public final class ExperimentResultsApp extends Application {
         Button browseButton = new Button("Choose");
         browseButton.setOnAction(event -> chooseSourceFile(stage));
 
-        Button loadButton = new Button("Load");
-        loadButton.setDefaultButton(true);
-        loadButton.setOnAction(event -> loadFromSource());
+        Button refreshButton = new Button("Refresh");
+        refreshButton.setDefaultButton(true);
+        refreshButton.setOnAction(event -> refreshFromSource());
 
         Button saveButton = new Button("Save");
         saveButton.setOnAction(event -> saveToSource());
@@ -114,7 +114,7 @@ public final class ExperimentResultsApp extends Application {
                 new Label("Source:"),
                 sourcePathField,
                 browseButton,
-                loadButton,
+                refreshButton,
                 saveButton,
                 new Separator(Orientation.VERTICAL),
                 clearButton
@@ -266,21 +266,21 @@ public final class ExperimentResultsApp extends Application {
         }
     }
 
-    private void loadFromSource() {
+    private void refreshFromSource() {
         String path;
         try {
             path = currentSourcePath();
         } catch (IllegalArgumentException e) {
-            UiDialogs.showError("Cannot load data", e);
+            UiDialogs.showError("Cannot refresh data", e);
             return;
         }
 
         background.run(
-                "Loading data...",
+                "Refreshing data...",
                 () -> storage.load(manager, path),
                 () -> {
                     rebuildTables(null, null, null);
-                    setStatus("Loaded and merged from " + path);
+                    setStatus("Refreshed from " + path);
                 }
         );
     }
@@ -299,7 +299,7 @@ public final class ExperimentResultsApp extends Application {
                 () -> storage.save(manager, path),
                 () -> {
                     rebuildTables(null, null, null);
-                    setStatus("Saved and merged to " + path);
+                    setStatus("Saved to " + path);
                 }
         );
     }
