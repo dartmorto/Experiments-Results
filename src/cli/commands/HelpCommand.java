@@ -24,6 +24,8 @@ public class HelpCommand extends Command {
     public void execute(String[] args) {
         System.out.println("""
                 Доступные команды:
+                register          - регистрация пользователя
+                login             - вход пользователя
                 create_experiment - создать эксперимент
                 create_run        - создать запуск
                 create_result     - создать результат
@@ -35,8 +37,6 @@ public class HelpCommand extends Command {
                 run_list          - показать все запуски
                 res_list          - показать все результаты
                 exp_summary       - сводка по эксперименту
-                save <path>       - сохранить данные в файл
-                load <path>       - загрузить данные из файла
                 history           - история команд
                 exit              - выход
                 Во время пошагового ввода: cancel, отмена или q — прервать команду

@@ -20,6 +20,11 @@
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.4</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -44,7 +49,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>ui.ExperimentResultsApp</mainClass>
+                    <mainClass>ui.Launcher</mainClass>
                     <options>
                         <option>--enable-native-access=javafx.graphics</option>
                         <option>--sun-misc-unsafe-memory-access=allow</option>

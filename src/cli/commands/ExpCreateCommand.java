@@ -2,6 +2,7 @@ package cli.commands;
 
 import domain.Experiment;
 import manager.CollectionManager;
+import user.AuthService;
 
 import java.util.Scanner;
 
@@ -13,8 +14,8 @@ import java.util.Scanner;
 
 public class ExpCreateCommand extends Command {
 
-    public ExpCreateCommand(CollectionManager manager, Scanner scanner) {
-        super(manager, scanner);
+    public ExpCreateCommand(CollectionManager manager, Scanner scanner, AuthService authService) {
+        super(manager, scanner, authService);
     }
 
     @Override
@@ -24,6 +25,7 @@ public class ExpCreateCommand extends Command {
 
     @Override
     public void execute(String[] args) {
+        requireLogin();
         
         String name;
         while (true) {
@@ -40,18 +42,7 @@ public class ExpCreateCommand extends Command {
         String description = scanner.nextLine();
         cancelIfCancelled(description);
 
-        String owner;
-        while (true) {
-            System.out.print("Владелец: ");
-            owner = scanner.nextLine();
-            cancelIfCancelled(owner);
-            if (!owner.isBlank()) {
-                break;
-            }
-            System.out.println("Ошибка: имя владельца не может быть пустым");
-        }
-
-        Experiment exp = manager.createExperiment(name, description, owner);
+        Experiment exp = manager.createExperiment(name, description, currentUsername());
         long expId = exp.getId();
 
         System.out.println("Добавлен эксперимент. ID: " + expId + " Название: " + name);

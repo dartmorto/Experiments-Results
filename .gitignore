@@ -3,6 +3,8 @@ out/
 target/
 !**/src/main/**/out/
 !**/src/test/**/out/
+C:\Users\user\IdeaProjects\Experiments-Results\config.properties
+users.properties
 
 ### Eclipse ###
 .apt_generated

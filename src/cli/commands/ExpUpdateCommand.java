@@ -2,6 +2,7 @@ package cli.commands;
 
 import domain.Experiment;
 import manager.CollectionManager;
+import user.AuthService;
 
 import java.util.Scanner;
 
@@ -11,8 +12,8 @@ import java.util.Scanner;
 
 public class ExpUpdateCommand extends Command {
 
-    public ExpUpdateCommand(CollectionManager manager, Scanner scanner) {
-        super(manager, scanner);
+    public ExpUpdateCommand(CollectionManager manager, Scanner scanner, AuthService authService) {
+        super(manager, scanner, authService);
     }
 
     @Override
@@ -22,6 +23,7 @@ public class ExpUpdateCommand extends Command {
 
     @Override
     public void execute(String[] args) {
+        requireLogin();
 
         System.out.print("ID эксперимента: ");
         String idLine = scanner.nextLine();
@@ -36,6 +38,11 @@ public class ExpUpdateCommand extends Command {
             return;
         }
 
+        if (!old.getOwnerUsername().equals(currentUsername())) {
+            System.out.println("Ошибка: у вас нет прав на изменение этого объекта");
+            return;
+        }
+
         System.out.print("Новое название: ");
         String name = scanner.nextLine();
         cancelIfCancelled(name);
@@ -44,7 +51,7 @@ public class ExpUpdateCommand extends Command {
         String description = scanner.nextLine();
         cancelIfCancelled(description);
 
-        Experiment updated = new Experiment(id, name, description, old.getOwner());
+        Experiment updated = new Experiment(id, name, description, old.getOwnerUsername());
 
         manager.updateExperiment(id, updated);
 

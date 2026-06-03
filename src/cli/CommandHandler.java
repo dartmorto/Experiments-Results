@@ -1,32 +1,11 @@
 package cli;
 
-import cli.commands.Command;
-import cli.commands.CommandCancelledException;
-import cli.commands.CommandHistory;
-import cli.commands.ExitCommand;
-import cli.commands.ExpCreateCommand;
-import cli.commands.ExpListCommand;
-import cli.commands.ExpShowCommand;
-import cli.commands.ExpSummaryCommand;
-import cli.commands.ExpUpdateCommand;
-import cli.commands.HelpCommand;
-import cli.commands.HistoryCommand;
-import cli.commands.LoadCommand;
-import cli.commands.ResultCreateCommand;
-import cli.commands.ResultListCommand;
-import cli.commands.ResultShowCommand;
-import cli.commands.RunCreateCommand;
-import cli.commands.RunListCommand;
-import cli.commands.RunShowCommand;
-import cli.commands.SaveCommand;
-import manager.CollectionManager;
-import storage.FileStorage;
+import cli.commands.*;
+import manager.*;
+import user.AuthService;
+import user.UserRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Обрабатывает пользовательский ввод и запускает команды.
@@ -34,18 +13,18 @@ import java.util.Scanner;
 public class CommandHandler {
 
     private final CollectionManager manager;
-    private final FileStorage storage;
+    private final AuthService authService;
     private final Scanner scanner;
     private final Map<String, Command> commands = new HashMap<>();
     private final CommandHistory history;
 
     public CommandHandler(CollectionManager manager) {
-        this(manager, new FileStorage());
+        this(manager, new AuthService(new UserRepository()));
     }
 
-    public CommandHandler(CollectionManager manager, FileStorage storage) {
+    public CommandHandler(CollectionManager manager, AuthService authService) {
         this.manager = Objects.requireNonNull(manager, "manager");
-        this.storage = Objects.requireNonNull(storage, "storage");
+        this.authService = Objects.requireNonNull(authService, "authService");
         this.scanner = new Scanner(System.in);
         this.history = new CommandHistory(readHistorySize());
 
@@ -106,21 +85,21 @@ public class CommandHandler {
      */
     private void registerCommands() {
         List<Command> availableCommands = List.of(
+                new RegisterCommand(manager, scanner, authService),
+                new LoginCommand(manager, scanner, authService),
                 new HelpCommand(manager, scanner),
                 new ExitCommand(manager, scanner),
-                new ExpCreateCommand(manager, scanner),
+                new ExpCreateCommand(manager, scanner, authService),
                 new ExpListCommand(manager, scanner),
                 new ExpShowCommand(manager, scanner),
-                new ExpUpdateCommand(manager, scanner),
+                new ExpUpdateCommand(manager, scanner, authService),
                 new ExpSummaryCommand(manager, scanner),
-                new RunCreateCommand(manager, scanner),
+                new RunCreateCommand(manager, scanner, authService),
                 new RunListCommand(manager, scanner),
                 new RunShowCommand(manager, scanner),
-                new ResultCreateCommand(manager, scanner),
+                new ResultCreateCommand(manager, scanner, authService),
                 new ResultListCommand(manager, scanner),
                 new ResultShowCommand(manager, scanner),
-                new SaveCommand(manager, scanner, storage),
-                new LoadCommand(manager, scanner, storage),
                 new HistoryCommand(manager, scanner, history)
         );
         availableCommands.forEach(this::register);

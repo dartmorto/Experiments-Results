@@ -37,5 +37,6 @@ public class RunShowCommand extends Command {
         System.out.println("ID: " + run.getId());
         System.out.println("Experiment ID: " + run.getExperimentId());
         System.out.println("Название: " + run.getName());
+        System.out.println("Оператор: " + run.getOperatorUsername());
     }
 }

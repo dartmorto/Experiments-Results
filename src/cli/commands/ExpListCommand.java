@@ -28,10 +28,10 @@ public class ExpListCommand extends Command {
             return;
         }
 
-        System.out.println("ID  Name");
+        System.out.println("ID  Name  Owner");
 
         for (Experiment e : manager.getAllExperiments().values()) {
-            System.out.println(e.getId() + "  " + e.getName());
+            System.out.println(e.getId() + "  " + e.getName() + "  " + e.getOwnerUsername());
         }
 
 

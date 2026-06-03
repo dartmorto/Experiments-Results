@@ -2,6 +2,7 @@ package cli.commands;
 
 import domain.Run;
 import manager.CollectionManager;
+import user.AuthService;
 
 import java.util.Scanner;
 
@@ -12,8 +13,8 @@ import java.util.Scanner;
 
 public class RunCreateCommand extends Command {
 
-    public RunCreateCommand(CollectionManager manager, Scanner scanner) {
-        super(manager, scanner);
+    public RunCreateCommand(CollectionManager manager, Scanner scanner, AuthService authService) {
+        super(manager, scanner, authService);
     }
 
     @Override
@@ -23,6 +24,7 @@ public class RunCreateCommand extends Command {
 
     @Override
     public void execute(String[] args) {
+        requireLogin();
 
         long experimentId;
         while (true) {
@@ -57,16 +59,7 @@ public class RunCreateCommand extends Command {
             System.out.println("Ошибка: имя запуска не может быть пустым");
         }
 
-        String operator;
-        while (true) {
-            System.out.print("Оператор: ");
-            operator = scanner.nextLine();
-            cancelIfCancelled(operator);
-            if (!operator.isBlank()) break;
-            System.out.println("Ошибка: оператор не может быть пустым");
-        }
-
-        Run run = manager.createRun(experimentId, name, operator);
+        Run run = manager.createRun(experimentId, name, currentUsername());
 
         System.out.println("Добавлен запуск. ID: " + run.getId() + " ID эксперимента: " + experimentId);
     }

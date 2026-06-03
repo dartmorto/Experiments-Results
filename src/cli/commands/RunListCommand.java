@@ -28,10 +28,10 @@ public class RunListCommand extends Command {
             return;
         }
 
-        System.out.println("ID  Name");
+        System.out.println("ID  Experiment  Name  Operator");
 
         for (Run r : manager.getAllRuns().values()) {
-            System.out.println(r.getId() + "  " + r.getExperimentId() + " " + r.getName());
+            System.out.println(r.getId() + "  " + r.getExperimentId() + "  " + r.getName() + "  " + r.getOperatorUsername());
         }
     }
 }

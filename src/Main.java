@@ -2,9 +2,10 @@
  * Запуск приложения.
  * Инициализирует основные компоненты системы и запускает CLI-интерфейс.
  */
-import cli.CommandHandler;
-import manager.CollectionManager;
-import storage.FileStorage;
+import cli.*;
+import manager.*;
+import database.DatabaseInitialization;
+
 
 public class Main {
 
@@ -15,22 +16,17 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        CollectionManager manager = new CollectionManager();
-        FileStorage storage = new FileStorage();
-
-        if (args.length > 0) {
-            String path = String.join(" ", args);
-            try {
-                storage.load(manager, path);
-                System.out.println("Данные загружены из файла: " + path);
-            } catch (Exception e) {
-                System.out.println("Ошибка загрузки при запуске: " + e.getMessage());
-            }
+        try {
+            DatabaseInitialization.init();
+        } catch (RuntimeException e) {
+            System.out.println("БД пока недоступна: " + e.getMessage());
+            System.out.println("Приложение запущено в режиме памяти.");
         }
 
-        CommandHandler cli = new CommandHandler(manager, storage);
+        CollectionManager manager = new CollectionManager();
+        CommandHandler commandHandler = new CommandHandler(manager);
 
-        cli.start();
+        System.out.println("Приложение запущено");
+        commandHandler.start();
     }
 }
-

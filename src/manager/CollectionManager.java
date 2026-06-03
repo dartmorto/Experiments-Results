@@ -36,15 +36,15 @@ public class CollectionManager {
         return currentResultId++;
     }
 
-    public Experiment createExperiment(String name, String description, String owner) {
+    public Experiment createExperiment(String name, String description, String ownerUsername) {
         Validator.requireNonBlank(name, "Название");
-        Validator.requireNonBlank(owner, "Владелец");
+        Validator.requireNonBlank(ownerUsername, "Владелец");
 
         Experiment experiment = new Experiment(
                 generateExperimentId(),
                 name.trim(),
                 description == null ? "" : description.trim(),
-                owner.trim()
+                ownerUsername.trim()
         );
         addExperiment(experiment);
         return experiment;
@@ -64,7 +64,7 @@ public class CollectionManager {
         Validator.requirePositive(id, "ID");
         Validator.requireNotNull(updated, "Эксперимент");
         Validator.requireNonBlank(updated.getName(), "Название");
-        Validator.requireNonBlank(updated.getOwner(), "Владелец");
+        Validator.requireNonBlank(updated.getOwnerUsername(), "Владелец");
 
         if (updated.getId() != id) {
             throw new IllegalArgumentException("ID не совпадает с объектом эксперимента");
@@ -73,6 +73,12 @@ public class CollectionManager {
             throw new IllegalArgumentException("Эксперимент не найден");
         }
         experiments.put(id, updated);
+    }
+
+    public boolean isExperimentOwner(long experimentId, String username) {
+        Validator.requirePositive(experimentId, "ID");
+        Validator.requireNonBlank(username, "Пользователь");
+        return getById(experimentId).getOwnerUsername().equals(username.trim());
     }
 
     public Experiment getExperiment(long id) {
@@ -126,19 +132,19 @@ public class CollectionManager {
         results.values().removeIf(result -> !runs.containsKey(result.getRunId()));
     }
 
-    public Run createRun(long experimentId, String name, String operator) {
-        return createRun(generateRunId(), experimentId, name, operator);
+    public Run createRun(long experimentId, String name, String operatorUsername) {
+        return createRun(generateRunId(), experimentId, name, operatorUsername);
     }
 
-    private Run createRun(long id, long experimentId, String name, String operator) {
+    private Run createRun(long id, long experimentId, String name, String operatorUsername) {
         Validator.requirePositive(id, "ID");
         Validator.requirePositive(experimentId, "ID эксперимента");
         Validator.requireNonBlank(name, "Название");
-        Validator.requireNonBlank(operator, "Оператор");
+        Validator.requireNonBlank(operatorUsername, "Оператор");
         Validator.requireExists(experiments.containsKey(experimentId), "Эксперимент не найден");
         Validator.requireExists(!runs.containsKey(id), "Запуск с таким ID уже существует");
 
-        Run run = new Run(id, experimentId, name.trim(), operator.trim());
+        Run run = new Run(id, experimentId, name.trim(), operatorUsername.trim());
         addRun(run);
         return run;
     }
@@ -173,13 +179,13 @@ public class CollectionManager {
         return selectedRuns;
     }
 
-    public Run updateRun(long id, String name, String operator) {
+    public Run updateRun(long id, String name, String operatorUsername) {
         Validator.requirePositive(id, "ID");
         Validator.requireNonBlank(name, "Название");
-        Validator.requireNonBlank(operator, "Оператор");
+        Validator.requireNonBlank(operatorUsername, "Оператор");
 
         Run run = getRunById(id);
-        Run updated = new Run(run.getId(), run.getExperimentId(), name.trim(), operator.trim());
+        Run updated = new Run(run.getId(), run.getExperimentId(), name.trim(), operatorUsername.trim());
         runs.put(id, updated);
         return updated;
     }

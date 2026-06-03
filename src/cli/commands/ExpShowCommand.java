@@ -31,7 +31,7 @@ public class ExpShowCommand extends Command {
             Experiment exp = manager.getById(id);
             System.out.println("ID: " + exp.getId());
             System.out.println("Название: " + exp.getName());
-            System.out.println("Владелец: " + exp.getOwner());
+            System.out.println("Владелец: " + exp.getOwnerUsername());
         } catch (IllegalArgumentException e) {
             System.out.println("Эксперимент не найден");
         }

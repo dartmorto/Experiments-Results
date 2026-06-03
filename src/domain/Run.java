@@ -13,18 +13,18 @@ public final class Run implements Comparable<Run>, Serializable {
     private final long id;
     private final long experimentId;
     private final String name;
-    private final String operator;
+    private final String operatorUsername;
     private final Instant createdAt;
 
-    public Run(long id, long experimentId, String name, String operator) {
-        this(id, experimentId, name, operator, Instant.now());
+    public Run(long id, long experimentId, String name, String operatorUsername) {
+        this(id, experimentId, name, operatorUsername, Instant.now());
     }
 
-    public Run(long id, long experimentId, String name, String operator, Instant createdAt) {
+    public Run(long id, long experimentId, String name, String operatorUsername, Instant createdAt) {
         this.id = id;
         this.experimentId = experimentId;
         this.name = name;
-        this.operator = operator;
+        this.operatorUsername = operatorUsername;
         this.createdAt = createdAt == null ? Instant.now() : createdAt;
     }
 
@@ -40,8 +40,12 @@ public final class Run implements Comparable<Run>, Serializable {
         return name;
     }
 
+    public String getOperatorUsername() {
+        return operatorUsername;
+    }
+
     public String getOperator() {
-        return operator;
+        return operatorUsername;
     }
 
     public Instant getCreatedAt() {

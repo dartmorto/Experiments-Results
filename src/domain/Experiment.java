@@ -13,24 +13,24 @@ public final class Experiment implements Comparable<Experiment>, Serializable {
     private final long id;
     private final String name;
     private final String description;
-    private final String owner;
+    private final String ownerUsername;
     private final Instant createdAt;
     private final Instant updatedAt;
 
-    public Experiment(long id, String name, String description, String owner) {
-        this(id, name, description, owner, Instant.now(), Instant.now());
+    public Experiment(long id, String name, String description, String ownerUsername) {
+        this(id, name, description, ownerUsername, Instant.now(), Instant.now());
     }
 
     public Experiment(long id,
                       String name,
                       String description,
-                      String owner,
+                      String ownerUsername,
                       Instant createdAt,
                       Instant updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.owner = owner;
+        this.ownerUsername = ownerUsername;
         this.createdAt = createdAt == null ? Instant.now() : createdAt;
         this.updatedAt = updatedAt == null ? this.createdAt : updatedAt;
     }
@@ -47,8 +47,12 @@ public final class Experiment implements Comparable<Experiment>, Serializable {
         return description;
     }
 
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
+
     public String getOwner() {
-        return owner;
+        return ownerUsername;
     }
 
     public Instant getCreatedAt() {

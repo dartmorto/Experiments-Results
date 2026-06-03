@@ -3,6 +3,7 @@ package cli.commands;
 import domain.MeasurementParam;
 import domain.Result;
 import manager.CollectionManager;
+import user.AuthService;
 
 import java.util.Scanner;
 
@@ -12,8 +13,8 @@ import java.util.Scanner;
  */
 
 public class ResultCreateCommand extends Command {
-    public ResultCreateCommand(CollectionManager manager, Scanner scanner) {
-        super(manager, scanner);
+    public ResultCreateCommand(CollectionManager manager, Scanner scanner, AuthService authService) {
+        super(manager, scanner, authService);
     }
 
 
@@ -24,6 +25,8 @@ public class ResultCreateCommand extends Command {
 
     @Override
     public void execute(String[] parts) {
+        requireLogin();
+
         long runId;
         if (parts.length < 2) {
             System.out.print("ID запуска: ");

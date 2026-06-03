@@ -1,6 +1,7 @@
 package cli.commands;
 
 import manager.CollectionManager;
+import user.AuthService;
 
 import java.util.Locale;
 import java.util.Scanner;
@@ -9,10 +10,16 @@ public abstract class Command {
 
     protected final CollectionManager manager;
     protected final Scanner scanner;
+    protected final AuthService authService;
 
     protected Command(CollectionManager manager, Scanner scanner) {
+        this(manager, scanner, null);
+    }
+
+    protected Command(CollectionManager manager, Scanner scanner, AuthService authService) {
         this.manager = manager;
         this.scanner = scanner;
+        this.authService = authService;
     }
 
     public abstract String name();
@@ -50,5 +57,17 @@ public abstract class Command {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Некорректный ID: " + raw);
         }
+    }
+
+    protected void requireLogin() {
+        if (authService == null) {
+            throw new IllegalArgumentException("Авторизация не настроена");
+        }
+        authService.requireLogin();
+    }
+
+    protected String currentUsername() {
+        requireLogin();
+        return authService.getCurrentUsername();
     }
 }
