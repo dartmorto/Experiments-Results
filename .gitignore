@@ -1,10 +1,18 @@
-### IntelliJ IDEA ###
-out/
+# IDE
+.idea/
+*.iml
+
+# local config / secrets
+config.properties
+*.properties
+
+# local app data
+data.bin
+
+# build
 target/
-!**/src/main/**/out/
-!**/src/test/**/out/
-C:\Users\user\IdeaProjects\Experiments-Results\config.properties
-users.properties
+out/
+*.class
 
 ### Eclipse ###
 .apt_generated
