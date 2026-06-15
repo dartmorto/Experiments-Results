@@ -9,7 +9,6 @@ import java.util.Scanner;
 /**
  * Команда обновления данных эксперимента.
  */
-
 public class ExpUpdateCommand extends Command {
 
     public ExpUpdateCommand(CollectionManager manager, Scanner scanner, AuthService authService) {
@@ -51,7 +50,17 @@ public class ExpUpdateCommand extends Command {
         String description = scanner.nextLine();
         cancelIfCancelled(description);
 
-        Experiment updated = new Experiment(id, name, description, old.getOwnerUsername());
+        System.out.print("Новое синтезируемое вещество: ");
+        String targetSubstance = scanner.nextLine();
+        cancelIfCancelled(targetSubstance);
+
+        Experiment updated = new Experiment(
+                id,
+                name,
+                description,
+                old.getOwnerUsername(),
+                targetSubstance
+        );
 
         manager.updateExperiment(id, updated);
 

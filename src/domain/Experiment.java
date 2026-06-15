@@ -16,9 +16,10 @@ public final class Experiment implements Comparable<Experiment>, Serializable {
     private final String ownerUsername;
     private final Instant createdAt;
     private final Instant updatedAt;
+    private String targetSubstance;
 
-    public Experiment(long id, String name, String description, String ownerUsername) {
-        this(id, name, description, ownerUsername, Instant.now(), Instant.now());
+    public Experiment(long id, String name, String description, String ownerUsername, String targetSubstance) {
+        this(id, name, description, ownerUsername, Instant.now(), Instant.now(), targetSubstance);
     }
 
     public Experiment(long id,
@@ -26,13 +27,15 @@ public final class Experiment implements Comparable<Experiment>, Serializable {
                       String description,
                       String ownerUsername,
                       Instant createdAt,
-                      Instant updatedAt) {
+                      Instant updatedAt,
+                      String targetSubstance) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.ownerUsername = ownerUsername;
         this.createdAt = createdAt == null ? Instant.now() : createdAt;
         this.updatedAt = updatedAt == null ? this.createdAt : updatedAt;
+        this.targetSubstance = targetSubstance;
     }
 
     public long getId() {
@@ -62,6 +65,8 @@ public final class Experiment implements Comparable<Experiment>, Serializable {
     public Instant getUpdatedAt() {
         return updatedAt;
     }
+
+    public String getTargetSubstance() { return targetSubstance; }
 
     @Override
     public int compareTo(Experiment other) {

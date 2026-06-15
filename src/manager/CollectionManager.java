@@ -36,7 +36,7 @@ public class CollectionManager {
         return currentResultId++;
     }
 
-    public Experiment createExperiment(String name, String description, String ownerUsername) {
+    public Experiment createExperiment(String name, String description, String ownerUsername, String targetSubstance) {
         Validator.requireNonBlank(name, "Название");
         Validator.requireNonBlank(ownerUsername, "Владелец");
 
@@ -44,7 +44,8 @@ public class CollectionManager {
                 generateExperimentId(),
                 name.trim(),
                 description == null ? "" : description.trim(),
-                ownerUsername.trim()
+                ownerUsername.trim(),
+                targetSubstance.trim()
         );
         addExperiment(experiment);
         return experiment;

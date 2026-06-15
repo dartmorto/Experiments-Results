@@ -7,16 +7,17 @@ import java.io.InputStream;
 public class SQLLoader {
 
     public static String load(String fileName) {
-        try (InputStream input = findResource(fileName)) {
-
-            if (input != null) {
-                return new String(input.readAllBytes(), "UTF-8");
-            }
-
+        try {
             File file = new File("resources", fileName);
             if (file.exists()) {
                 try (InputStream fileInput = new FileInputStream(file)) {
                     return new String(fileInput.readAllBytes(), "UTF-8");
+                }
+            }
+
+            try (InputStream input = findResource(fileName)) {
+                if (input != null) {
+                    return new String(input.readAllBytes(), "UTF-8");
                 }
             }
 
