@@ -1,78 +1,327 @@
-# Experiments-Results
+# Laboratory Quality Control System for Synthesis
 
-# Scientific Experiment Data Manager
+Java-приложение для хранения, анализа и визуального контроля лабораторных данных, связанных с экспериментами, запусками экспериментов и результатами измерений.
 
-An application for structured storage and management of scientific experiment data. Designed to help researchers efficiently organize, track, and analyze experimental results.
+Проект разработан как учебная лабораторная система с поддержкой авторизации, работы с базой данных, визуального интерфейса JavaFX, истории изменений объектов и сравнения лабораторных записей.
 
-## Visual Diagram: Experiment → Runs → Results
+---
 
-```text
-+-------------------+
-|   Experiment 1    |
-+-------------------+
-          │
-          ▼
-    +------------+           +------------+
-    |   Run 1    |──────────>|   Run 2    |
-    +------------+           +------------+
-       │       │                 │
-       ▼       ▼                 ▼
-  +--------+ +--------+     +--------+
-  | Result | | Result |     | Result |
-  |  1     | |  2     |     |  1     |
-  +--------+ +--------+     +--------+
-````
+## О проекте
 
-Experiment — main entity representing the scientific experiment
-Run — single attempt or session of the experiment
-Result — measured data from the run
+Система предназначена для структурированного хранения лабораторных данных.
 
-Features
-1. Data Management (CRUD)
-Create new experiments, launches, and results with validated input.
-Read/View detailed information about experiments and their related launches/results.
-Update/Edit existing records while maintaining data integrity.
-Delete experiments, launches, or results with confirmation to prevent accidental loss.
-2. Complex Connectivity Structure
-Implements a one-to-many hierarchy:
-Experiment → Launches → Results
-Nested collections allow easy navigation and organization of related data.
-Supports advanced queries and filtering based on experiment parameters.
-3. Data Validation
-Ensures all input data meets predefined constraints.
-Handles invalid inputs with informative error messages.
-Maintains consistency across related entities.
-4. Exception Handling
-Robust error handling for database operations and user input.
-Provides clear feedback for troubleshooting and debugging.
-
-Technologies Used
-Java (Core)
-Collections framework for structured storage
-Exception handling and validation libraries
-Optional: JSON/XML for data persistence
-
-## JavaFX UI
-
-JavaFX UI entry point: `ui.Launcher`.
-
-Recommended Maven launch:
+Основная предметная область:
 
 ```text
-mvn javafx:run
+Experiment → Run → Result
 ```
 
-Maven downloads JavaFX automatically, so you do not need to pass `--module-path` manually.
+* **Experiment** — эксперимент или серия лабораторных работ.
+* **Run** — конкретный запуск эксперимента.
+* **Result** — измеренный параметр, полученный в рамках запуска.
 
-Compile and run it after adding JavaFX SDK:
+Пример использования: хранение данных о синтезе веществ, например FeSO₄, с фиксацией целевого вещества, параметров измерений, оператора, времени создания и изменений.
+
+---
+
+## Основные возможности
+
+* регистрация и авторизация пользователей;
+* автоматическая привязка объектов к текущему пользователю;
+* создание, просмотр, обновление и удаление экспериментов;
+* создание, просмотр, обновление и удаление запусков экспериментов;
+* создание, просмотр, обновление и удаление результатов измерений;
+* хранение данных в PostgreSQL через JDBC;
+* визуальный интерфейс на JavaFX;
+* независимая нумерация ID для экспериментов, запусков и результатов;
+* хранение целевого вещества эксперимента;
+* визуальная история изменений объектов;
+* сравнение двух выбранных объектов;
+* простая архитектура с разделением ответственности.
+
+---
+
+## Технологии
+
+* **Java**
+* **JavaFX**
+* **PostgreSQL**
+* **JDBC**
+* **SQL**
+* **Maven / Gradle**
+* **Git / GitHub**
+
+---
+
+## Архитектура проекта
+
+Проект построен по слоистой архитектуре.
 
 ```text
-javac --module-path C:\path\to\javafx-sdk\lib --add-modules javafx.controls -d out @javafx-sources.txt
-java --module-path C:\path\to\javafx-sdk\lib --add-modules javafx.controls -cp out ui.Launcher
+UI layer
+↓
+Controller layer
+↓
+Manager / Service layer
+↓
+Repository layer
+↓
+Database
 ```
 
-You can pass a data file at startup:
+### UI layer
+
+Отвечает за отображение интерфейса пользователя.
+
+Примеры классов:
 
 ```text
-java --module-path C:\path\to\javafx-sdk\lib --add-modules javafx.controls -cp out ui.Launcher data.bin
+ExperimentResultsApp
+ExperimentView
+RunView
+ResultView
+HistoryView
+CompareView
 ```
+
+### Controller layer
+
+Обрабатывает действия пользователя и связывает интерфейс с бизнес-логикой.
+
+Примеры классов:
+
+```text
+ExperimentController
+RunController
+ResultController
+HistoryController
+CompareController
+```
+
+### Manager / Service layer
+
+Содержит основную логику работы с объектами.
+
+Пример:
+
+```text
+CollectionManager
+ChangeLogService
+```
+
+### Repository layer
+
+Отвечает за взаимодействие с базой данных.
+
+Примеры классов:
+
+```text
+ExperimentRepository
+RunRepository
+ResultRepository
+ChangeLogRepository
+UserRepository
+```
+
+---
+
+## Модель данных
+
+### Experiment
+
+Эксперимент содержит:
+
+* `id`
+* `name`
+* `description`
+* `owner`
+* `targetSubstance`
+* `createdAt`
+* `updatedAt`
+
+### Run
+
+Запуск эксперимента содержит:
+
+* `id`
+* `experimentId`
+* `name`
+* `operator`
+* `createdAt`
+* `updatedAt`
+
+### Result
+
+Результат измерения содержит:
+
+* `id`
+* `runId`
+* `param`
+* `value`
+* `unit`
+* `comment`
+* `createdAt`
+* `updatedAt`
+
+---
+
+## История изменений
+
+В проекте реализован механизм аудита изменений объектов.
+
+Для каждого изменения фиксируется:
+
+* тип объекта;
+* ID объекта;
+* действие;
+* изменённое поле;
+* старое значение;
+* новое значение;
+* пользователь;
+* дата и время изменения.
+
+История открывается в отдельной вкладке по запросу пользователя.
+
+Это позволяет отследить, кто, когда и какие данные изменил.
+
+---
+
+## Сравнение объектов
+
+Пользователь может выбрать два объекта одного типа и открыть визуальное сравнение.
+
+Сравнение отображается в отдельной вкладке в формате:
+
+```text
+Field | Object 1 | Object 2 | Equal
+```
+
+Это позволяет быстро увидеть различия между двумя экспериментами, запусками или результатами.
+
+---
+
+## Авторизация
+
+В системе реализована простая авторизация пользователей.
+
+После входа в аккаунт пользователь создаёт объекты от своего имени.
+Поле владельца заполняется автоматически и не вводится вручную.
+
+Это защищает данные от некорректного указания владельца.
+
+---
+
+## Работа с базой данных
+
+Проект использует PostgreSQL и JDBC.
+
+Для подключения используется конфигурационный файл или переменные окружения.
+
+Пример конфигурации:
+
+```properties
+db.url=jdbc:postgresql://localhost:5432/experiments
+db.user=your_username
+db.password=your_password
+```
+
+Файл с реальными логином и паролем не должен попадать в GitHub.
+
+Для примера можно использовать:
+
+```text
+config.example.properties
+```
+
+---
+
+## Структура проекта
+
+Примерная структура:
+
+```text
+src/
+ ├── domain/
+ │   ├── Experiment.java
+ │   ├── Run.java
+ │   ├── Result.java
+ │   └── ChangeLogEntry.java
+ │
+ ├── manager/
+ │   └── CollectionManager.java
+ │
+ ├── database/
+ │   ├── DatabaseStorage.java
+ │   ├── ExperimentRepository.java
+ │   ├── RunRepository.java
+ │   ├── ResultRepository.java
+ │   └── ChangeLogRepository.java
+ │
+ ├── user/
+ │   ├── AuthService.java
+ │   └── UserRepository.java
+ │
+ └── ui/
+     ├── ExperimentResultsApp.java
+     ├── controller/
+     ├── view/
+     ├── model/
+     └── util/
+```
+
+---
+
+## Принципы проектирования
+
+В проекте применяются основные принципы ООП и SOLID:
+
+* разделение ответственности между UI, контроллерами, менеджерами и репозиториями;
+* инкапсуляция логики работы с объектами;
+* отделение бизнес-логики от визуального интерфейса;
+* использование Repository для работы с БД;
+* передача зависимостей через конструкторы;
+* расширяемость интерфейса через отдельные View и Controller-классы.
+
+---
+
+## Как запустить проект
+
+1. Склонировать репозиторий:
+
+```bash
+git clone https://github.com/dartmorto/Laboratory-Quality-Control-System-for-Synthesis.git
+```
+
+2. Открыть проект в IntelliJ IDEA.
+
+3. Создать базу данных PostgreSQL.
+
+4. Настроить подключение к БД через `config.properties` или переменные окружения.
+
+5. Запустить SQL-скрипты инициализации таблиц.
+
+6. Запустить JavaFX-приложение через главный класс:
+
+```text
+ui.ExperimentResultsApp
+```
+
+---
+
+## Возможное развитие проекта
+
+* добавить загрузку изображений лабораторных образцов;
+* связать результаты экспериментов с ML-моделью классификации качества синтеза;
+* реализовать экспорт отчётов в PDF/CSV;
+* добавить роли пользователей;
+* добавить расширенную фильтрацию и поиск;
+* добавить графики изменения параметров;
+* реализовать полноценную систему контроля качества лабораторных данных.
+
+---
+
+## Автор
+
+Проект выполнен в рамках учебной работы по Java, базам данных и разработке пользовательского интерфейса.
+
+Автор: **vivi morte (dartmorto)**
