@@ -48,6 +48,7 @@ public class ExperimentResultsApp extends Application {
 
     private TextField experimentNameField;
     private TextArea experimentDescriptionArea;
+    private TextField experimentTargetSubstanceField;
 
     private TextField runExperimentIdField;
     private TextField runNameField;
@@ -241,15 +242,22 @@ public class ExperimentResultsApp extends Application {
 
         experimentNameField = new TextField();
         experimentDescriptionArea = new TextArea();
+        experimentTargetSubstanceField = new TextField();
+
         experimentDescriptionArea.setPrefRowCount(3);
 
         GridPane form = new GridPane();
         form.setHgap(8);
         form.setVgap(8);
+
         form.add(new Label("Name:"), 0, 0);
         form.add(experimentNameField, 1, 0);
+
         form.add(new Label("Description:"), 0, 1);
         form.add(experimentDescriptionArea, 1, 1);
+
+        form.add(new Label("Target substance:"), 0, 2);
+        form.add(experimentTargetSubstanceField, 1, 2);
 
         Button createButton = new Button("Create");
         createButton.setOnAction(event -> createExperiment());
@@ -419,10 +427,14 @@ public class ExperimentResultsApp extends Application {
             manager.createExperiment(
                     experimentNameField.getText(),
                     experimentDescriptionArea.getText(),
-                    authService.getCurrentUsername()
+                    authService.getCurrentUsername(),
+                    experimentTargetSubstanceField.getText()
             );
+
             experimentNameField.clear();
             experimentDescriptionArea.clear();
+            experimentTargetSubstanceField.clear();
+
             showInfo("Эксперимент создан. Нажмите Refresh, чтобы обновить таблицу.");
         } catch (Exception e) {
             showError("Ошибка создания эксперимента", e.getMessage());

@@ -42,8 +42,20 @@ public class ExpCreateCommand extends Command {
         String description = scanner.nextLine();
         cancelIfCancelled(description);
 
-        Experiment exp = manager.createExperiment(name, description, currentUsername());
+        System.out.print("Целевое вещество: ");
+        String targetSubstance = scanner.nextLine();
+        cancelIfCancelled(targetSubstance);
+
+        while (targetSubstance.trim().isEmpty()) {
+            System.out.println("Ошибка: целевое вещество не может быть пустым");
+            System.out.print("Целевое вещество: ");
+            targetSubstance = scanner.nextLine();
+            cancelIfCancelled(targetSubstance);
+        }
+
+        Experiment exp = manager.createExperiment(name, description, currentUsername(), targetSubstance);
         long expId = exp.getId();
+
 
         System.out.println("Добавлен эксперимент. ID: " + expId + " Название: " + name);
 

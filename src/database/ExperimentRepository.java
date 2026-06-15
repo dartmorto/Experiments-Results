@@ -43,8 +43,10 @@ public class ExperimentRepository {
                         resultSet.getString("description"),
                         resultSet.getString("owner_username"),
                         resultSet.getTimestamp("created_at").toInstant(),
-                        resultSet.getTimestamp("updated_at").toInstant()
+                        resultSet.getTimestamp("updated_at").toInstant(),
+                        resultSet.getString("target_substance")
                 );
+
                 experiments.put(experiment.getId(), experiment);
             }
         }

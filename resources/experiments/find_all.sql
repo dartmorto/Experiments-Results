@@ -1,3 +1,10 @@
-SELECT id, name, description, owner_username, created_at, updated_at
+SELECT
+    id,
+    name,
+    description,
+    owner_username,
+    target_substance,
+    created_at,
+    updated_at
 FROM experiments
-ORDER BY id
+ORDER BY id;

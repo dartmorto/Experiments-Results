@@ -1,2 +1,9 @@
-INSERT INTO experiments(id, name, description, owner_username, created_at, updated_at)
-VALUES (?, ?, ?, ?, ?, ?)
+INSERT INTO experiments (
+    name,
+    description,
+    owner_username,
+    target_substance,
+    created_at,
+    updated_at
+)
+VALUES (?, ?, ?, ?, ?, ?);
